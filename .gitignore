@@ -1,0 +1,6 @@
+node_modules/
+certificate/
+.idea/
+package.json
+package-lock.json
+*.png

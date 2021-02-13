@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+<head>
+    <title>Slovonymá</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icon.png">
+</head>
+<body>
+<div class="animated-bg-wrapper">
+    <div class="wave"></div>
+</div>
+<div class="content-container">
+
+    <div class="active-users" id="active-users" style="display: none">
+        <p id="room_code">Kód miestnosti: xxxxxxx</p>
+        <p id="u">Pripojení používatelia</p>
+        <ul class="users" id="users"></ul>
+    </div>
+
+    <div class="menu-content" id="menu-content">
+        <div class="left-content" id="left-content">
+            <div class="main-title" id="main-title">Slovonymá</div>
+            <div class="nick-set" id="login">
+                <button id="login-btn" class="active-button">Prihlásenie</button>
+                <button id="register-btn" class="inactive-button">Registrácia</button>
+                <br><br>
+                <div id="login-tab">
+                    <h1> Prihlás sa! </h1> <br>
+                    <form action="" id="login-form">
+                        Prezývka <br>
+                        <input id="nick" autocomplete="off" /> <br>
+                        Heslo <br>
+                        <input id="pass" type="password" autocomplete="off" /> <br>
+                        <button value="login-btn">Prihlásiť</button>
+                        <p id="alert-login"></p>
+                    </form>
+                </div>
+                <div id="register-tab" style="display: none">
+                    <h1> Registruj sa! </h1> <br>
+                    <form action="" id="register-form">
+                        Prezývka <br>
+                        <input id="reg-nick" autocomplete="off" /> <br>
+                        Heslo <br>
+                        <input id="reg-pass" type="password" autocomplete="off" /> <br>
+                        Potvrď heslo <br>
+                        <input id="reg-pass-confirm" type="password" autocomplete="off" /> <br>
+                        <button value="login-btn">Registrovať</button>
+                        <p id="alert-register"></p>
+                    </form>
+                </div>
+            </div>
+
+            <div class="nick-set" id="nick-set">
+                <h1> Pripoj sa! </h1> <br>
+                <form action="" id="join-form">
+                    Miestnosť (Nechaj prázdne pre náhodnú novú) <br>
+                    <input id="room" autocomplete="off" /> <br>
+                    <button id="join_room" value="join_room">Pripojiť sa</button>
+                    <button id="find_room" value="find_room">Pripojiť sa do náhodnej otvorenej</button>
+                    <button id="create_private_room" value="create_private_room">Vytvoriť súkromnú</button>
+                    <p id="alert-join"></p>
+                </form>
+            </div>
+        </div>
+        <div class="leaderboard-container" id="leaderboard" style="text-align: center">
+            <h1> Rebríček hráčov </h1> <br>
+            <table class="leaderboard" id="leadboard-table"></table>
+            <form action="" id="search-player-form">
+                <input id="search-player-name" autocomplete="off" /> <br>
+                <button id="search-player" value="join_room">Vyhľadaj</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="game-div" id="wait-for-other-message" style="display: none">
+        <h1> Čaká sa na druhého hráča </h1>
+    </div>
+
+    <div class="game-div" id="word-select" style="display: none">
+        <h1> Si opisovač, vyber si slovo </h1> <br>
+        <form action="" class="word-form" id="word-select-form">
+            <input id="word" autocomplete="off" />
+            <button id="word-select-button">Vyber slovo</button><br>
+            <div class="flex-break"></div>
+            <button id="preset_word_1"></button>
+            <button id="preset_word_2"></button>
+            <button id="preset_word_3"></button>
+            <div class="flex-break"></div>
+            <p id="alert-word"></p>
+            <div class="loader" id="loader" style="display: none"></div>
+        </form>
+    </div>
+
+    <div class="game-div" id="wait-for-word-select-message" style="display: none">
+        <h1> Si hádač! Čakaj kým si opisovač vyberie slovo </h1>
+    </div>
+
+    <div class="game-div" id="top-bar" style="display: none">
+        <h1 id="word-display">  </h1>
+        WIP
+    </div>
+
+    <div class="game-div" id="guesser-ui" style="display: none">
+        WIP
+    </div>
+
+    <div class="hint-container" id="hint-display" style="display: none">
+        <h1> Nápovedy </h1>
+        <ul class="hints" id="hints"></ul>
+        <form action="" id="hint-form">
+            <input id="hint" autocomplete="off" />
+            <button>Pošli</button>
+        </form>
+    </div>
+
+    <div class="guess-container" id="guess-display" style="display: none">
+        <h1> Hádané slová </h1>
+        <ul class="guesses" id="guesses"></ul>
+        <form action="" id="guess-form">
+            <input id="guess" autocomplete="off" />
+            <button>Pošli</button>
+        </form>
+    </div>
+
+    <div class="game-div" id="end-stats" style="display: none"></div>
+    <div class="game-div" id="end-buttons" style="display: none">
+        <form action="" id="replay-form">
+            <button id="replay-btn">Hrať znova</button>
+        </form> <br>
+        <button onclick="leave()">Skončiť hru</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="game.js"></script>
+</div>
+</body>
+</html>
