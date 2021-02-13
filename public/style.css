@@ -1,0 +1,287 @@
+.hint-container, .guess-container {
+    text-align: left;
+    width: 35%;
+    height: 70%;
+    position: relative;
+    float: right;
+    padding: 1%;
+    margin: 2%;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(255, 249, 157, 0.75));
+    border-radius: 10px;
+    border-style: none;
+}
+
+.active-users {
+    text-align: left;
+    width: 15%;
+    position: relative;
+    float: left;
+    padding: 1%;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(255, 249, 157, 0.75));
+    border-radius: 10px;
+    border-style: none;
+}
+
+.nick-set, .stats, .game-div, .leaderboard-container{
+    text-align: center;
+    align-content: center;
+    max-width: 100%;
+    padding: 1%;
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1%;
+    background-color: rgba(255, 249, 157, 0.75);
+    border-radius: 10px;
+    border-style: none;
+}
+
+.leaderboard-container {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.nick-set {
+    width: 60%;
+}
+
+.stats, .game-div {
+    width: 30%;
+}
+
+.main-title {
+    text-align: center;
+    align-content: center;
+    font-size: 50px;
+}
+
+.menu-content {
+    display: flex;
+    height: 100%;
+}
+
+.left-content {
+    min-width: 50%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.animated-bg-wrapper {
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin: auto;
+    background-image: linear-gradient(to top, palegoldenrod, white);
+}
+
+@keyframes move-wave {
+    0%   {transform: translateX(0%) scaleY(0.8) translateY(40%) rotate(0deg)}
+    25%  {transform: translateX(-12%) scaleY(1.1) translateY(42%)rotate(-5deg)}
+    50%  {transform: translateX(-25%) scaleY(1.3) translateY(38%)rotate(0deg)}
+    75%  {transform: translateX(-37%) scaleY(1.1) translateY(42%)rotate(5deg)}
+    100% {transform: translateX(-50%)  scaleY(0.8) translateY(40%)rotate(0deg)}
+}
+
+.wave {
+    overflow: hidden;
+    background-image: url('wave.png');
+    position: absolute;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-repeat: repeat no-repeat;
+    background-size: 50% 100%;
+    animation: move-wave 6s ease-in-out infinite;
+}
+
+@media screen and (orientation: portrait) {
+    .hint-container, .guess-container, .active-users {
+        width: 40%;
+        height: 65%;
+        display: table;
+        margin-left: 2%;
+        margin-right: 2%;
+        font-size: 30px;
+        margin-bottom: 10%;
+    }
+    .nick-set, .stats {
+        width: 80%;
+        font-size: 30px;
+    }
+    h1 {
+        font-size: 40px;
+    }
+    form {
+        font-size: 30px;
+    }
+
+    input {
+        font-size: 30px;
+    }
+
+    button {
+        font-size: 30px;
+    }
+
+}
+
+.hints, .guesses, .users {
+    list-style-type: none;
+}
+
+.leaderboard {
+    margin: auto;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    text-align: center;
+    background-color: #ffffff;
+}
+
+.content-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-family: "Lucida Console", Courier;
+    padding: 5px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 25px;
+    margin: 0px;
+}
+
+ul {
+    overflow: auto;
+    overflow-x: hidden;
+    height: 78%;
+    text-align: left;
+    justify-content: left;
+    padding-left: 0;
+}
+
+li {
+    padding: 5px 5px;
+    margin: 3px;
+    border-radius: 5px;
+    border-style: none;
+    background: rgb(255, 255, 255);
+    word-wrap: break-word;
+    width: 95%;
+}
+
+form {
+    width: 100%;
+    text-align: center;
+}
+
+.word-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+input {
+    font-family: "Lucida Console", Courier;
+    border-color: lightgrey;
+    padding: 10px;
+    margin: 2px;
+    width: 70%;
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+button {
+    font-family: "Lucida Console", Courier;
+    background-color: rgb(255, 249, 157);
+    border-style: none;
+    border-radius: 10px;
+    transition: background 0.5s ease-in-out, border-radius 0.5s ease-in-out, color 0.5s ease-in-out;
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: 2px;
+}
+
+button:hover {
+    background-color: rgb(250, 205, 138);
+}
+
+.rate-button-0 {
+    border-style: solid;
+    border-width: 1px;
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(0, 255, 0);
+}
+
+.rate-button-1 {
+    border-style: solid;
+    border-width: 1px;
+    background-color: rgb(192, 255, 192);
+    border-color: rgb(64, 255, 64);
+}
+
+.rate-button-2 {
+    border-style: solid;
+    border-width: 1px;
+    background-color: rgb(128, 255, 128);
+    border-color: rgb(128, 255, 128);
+}
+
+.rate-button-3 {
+    border-style: solid;
+    border-width: 1px;
+    background-color: rgb(64, 255, 64);
+    border-color: rgb(192, 255, 192);
+}
+
+.rate-button-4 {
+    border-style: solid;
+    border-width: 1px;
+    background-color: rgb(0, 255, 0);
+    border-color: rgb(255, 255, 255);
+}
+
+.rate-button-reject {
+    background-color: rgb(255, 0, 0);
+}
+
+.active-button {
+    background-color: rgb(255, 249, 157);
+}
+
+.inactive-button {
+    background-color: rgb(255, 255, 255);
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+.loader {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #FFF99D;
+    border-bottom: 8px solid #FFF99D;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.flex-break {
+    flex-basis: 100%;
+    height: 0;
+}
