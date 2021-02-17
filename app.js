@@ -85,7 +85,7 @@ io.on('connection', (socket) => {
     game_server.displayLeaderboard(io, socket, scores);
   });
 });
-/*
+
 var host = '127.0.0.1';
 // Listen on a specific port via the PORT environment variable
 var port = 8080;
@@ -96,4 +96,4 @@ cors_proxy.createServer({
   removeHeaders: ['cookie', 'cookie2']
 }).listen(port, host, function() {
   console.log('Running CORS Anywhere on ' + host + ':' + port);
-});*/
+});
