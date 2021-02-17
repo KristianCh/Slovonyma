@@ -29,6 +29,7 @@ game_server.successfulGuessUpdate = uploadGameData;
 game_server.getPresetWords = getPresetWords;
 
 io.on('connection', (socket) => {
+  io.set('transports', ['websocket']);
   socket.on('disconnect', () => {
     game_server.disconnectUser(io, socket);
   });
