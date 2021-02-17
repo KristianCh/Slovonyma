@@ -41,7 +41,7 @@ function getPresetWords() {
 
 game_server.successfulGuessUpdate = uploadGameData;
 game_server.getPresetWords = getPresetWords;
-
+/*
 io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     game_server.disconnectUser(io, socket);
