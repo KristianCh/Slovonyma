@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-http = require('http');
 
 var app = express();
 
@@ -22,14 +21,7 @@ server.listen({ port: process.env.PORT, host: process.env.HOST}, () => {
 
 app.listen(process.env.port)
 
-var server = http.createServer(app);
-
-server.listen(port, function () {
-  var addr = server.address();
-  console.log('   app listening on http://' + addr.address + ':' + addr.port);
-});
-
-var io = require('socket.io').listen(server);
+var io = require('socket.io').listen(app);
 io.configure(function() {
   io.set('transports', ['websocket', 'xhr-polling']);
 });
