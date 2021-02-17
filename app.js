@@ -27,9 +27,6 @@ var io = require('socket.io').listen(app);
 io.configure(function() {
   io.set('transports', ['websocket']);
 });
-io.configure(function() {
-  io.set('match origin protocol', true);
-});
 
 game_server = require('./gameServer')
 
