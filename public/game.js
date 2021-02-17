@@ -11,7 +11,9 @@ $(function () {
     var hintLength = 3 + Math.floor(Math.random() * Math.floor(3));
     document.getElementById("hint-length").innerHTML = 'Zadaj indíciu ' + ['s tromi', 'so štyrmi', 's piatimi'][hintLength-3] + ' slovami';
 
+    console.log('requesting leaderboard');
     socket.emit('request leaderboard', '');
+    console.log('done requesting leaderboard');
 
     if (sessionStorage.getItem("name") !== null) document.getElementById("login").style.display = "none";
 
