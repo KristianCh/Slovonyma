@@ -24,6 +24,7 @@ server.listen({ port: process.env.PORT, host: process.env.HOST}, () => {
 app.listen(process.env.port)
 
 var io = require('socket.io').listen(app);
+io.configure(function () { io.set('transports', ['websocket','xhr-polling']);
 
 game_server = require('./gameServer')
 
