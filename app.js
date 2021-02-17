@@ -2,18 +2,21 @@ const express = require('express');
 const path = require('path');
 
 var app = express();
+var server = require('http').createServer(app);
+
+var io = require('socket.io')(server);
+io.configure(function() {
+  io.set('transports', ['websocket', 'xhr-polling']);
+});
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/game.html');
 });
 
-app.listen(process.env.port)
+server.listen(process.env.port)
 
-var io = require('socket.io').listen(app);
-/*io.configure(function() {
-  io.set('transports', ['websocket', 'xhr-polling']);
-});*/
+
 
 game_server = require('./gameServer')
 

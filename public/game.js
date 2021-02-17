@@ -3,7 +3,7 @@ function leave() {
 }
 
 $(function () {
-    var socket = io();
+    var socket = io({transports:['websocket']});
     const callbackAlerts = ["Miestnosť je plná", "Nenašla sa voľná  miestnosť", "Miestnosť s týmto kódom už existuje", "Musíš byť prihlásený",
         "Nemôžeš hrať dva krát naraz"];
     var role = '';
