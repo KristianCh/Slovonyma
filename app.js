@@ -4,7 +4,7 @@ const path = require('path');
 var app = express();
 var server = require('http').createServer(app);
 
-var io = require('socket.io');
+var io = require('socket.io')(server);
 
 
 app.use(express.static(path.join(__dirname, '/public')));
@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/game.html');
 });
 
-app.listen(process.env.port)
+server.listen(process.env.port)
 
 game_server = require('./gameServer')
 
