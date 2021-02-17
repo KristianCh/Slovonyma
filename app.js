@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/game.html');
 });
 
-const credentials = {
+/*const credentials = {
   key: fs.readFileSync('certificate/key.pem'),
   cert: fs.readFileSync('certificate/cert.pem')
 };
@@ -19,7 +19,9 @@ var server = https.createServer(credentials, app);
 
 server.listen({ port: process.env.PORT, host: process.env.HOST}, () => {
   console.log('listening on https://https://slovonyma.azurewebsites.net/:5000');
-});
+});*/
+
+app.listen(process.env.port)
 
 var io = require('socket.io')(server);
 
@@ -94,7 +96,7 @@ io.on('connection', (socket) => {
   });
 });
 
-var host = process.env.HOST || '127.0.0.1';
+var host = '127.0.0.1';
 // Listen on a specific port via the PORT environment variable
 var port = 30500;
 
