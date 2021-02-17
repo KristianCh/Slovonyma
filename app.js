@@ -17,7 +17,7 @@ const credentials = {
 
 var server = https.createServer(credentials, app);
 
-server.listen({ port: 5000, host: 'https://slovonyma.azurewebsites.net/'}, () => {
+server.listen({ port: process.env.PORT, host: process.env.HOST}, () => {
   console.log('listening on https://https://slovonyma.azurewebsites.net/:5000');
 });
 
@@ -96,7 +96,7 @@ io.on('connection', (socket) => {
 
 var host = process.env.HOST || '127.0.0.1';
 // Listen on a specific port via the PORT environment variable
-var port = process.env.PORT || 8080;
+var port = 30500;
 
 var cors_proxy = require('cors-anywhere');
 cors_proxy.createServer({
