@@ -23,7 +23,7 @@ server.listen({ port: process.env.PORT, host: process.env.HOST}, () => {
 
 app.listen(process.env.port)
 
-var io = require('socket.io');
+var io = require('socket.io').listen(app);
 
 game_server = require('./gameServer')
 
