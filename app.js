@@ -17,8 +17,8 @@ const credentials = {
 
 var server = https.createServer(credentials, app);
 
-server.listen({ port: 5000, host: '192.168.0.16'}, () => {
-  console.log('listening on https://192.168.0.16:5000');
+server.listen({ port: 5000, host: 'https://slovonyma.azurewebsites.net/'}, () => {
+  console.log('listening on https://https://slovonyma.azurewebsites.net/:5000');
 });
 
 var io = require('socket.io')(server);
