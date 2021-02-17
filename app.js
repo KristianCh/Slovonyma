@@ -10,10 +10,10 @@ app.get('/', (req, res) => {
 
 app.listen(process.env.port)
 
-var io = require('socket.io').listen(app);
+/*var io = require('socket.io').listen(app);
 io.configure(function() {
   io.set('transports', ['websocket', 'xhr-polling']);
-});
+});*/
 
 game_server = require('./gameServer')
 
@@ -29,7 +29,7 @@ function getPresetWords() {
 game_server.successfulGuessUpdate = uploadGameData;
 game_server.getPresetWords = getPresetWords;
 
-io.on('connection', (socket) => {
+/*io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     game_server.disconnectUser(io, socket);
   });
@@ -88,7 +88,7 @@ io.on('connection', (socket) => {
 /*
 var host = '127.0.0.1';
 // Listen on a specific port via the PORT environment variable
-var port = 30500;
+var port = 8080;
 
 var cors_proxy = require('cors-anywhere');
 cors_proxy.createServer({
