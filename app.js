@@ -1,7 +1,5 @@
 const express = require('express');
 const path = require('path');
-const https = require('https');
-const fs = require('fs');
 
 var app = express();
 
@@ -23,7 +21,7 @@ server.listen({ port: process.env.PORT, host: process.env.HOST}, () => {
 
 app.listen(process.env.port)
 
-var io = require('socket.io')(app);
+var io = require('socket.io').listen('https://slovonyma.azurewebsites.net');
 io.configure(function() {
   io.set('transports', ['websocket', 'xhr-polling']);
 });
@@ -41,7 +39,7 @@ function getPresetWords() {
 
 game_server.successfulGuessUpdate = uploadGameData;
 game_server.getPresetWords = getPresetWords;
-/*
+
 io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     game_server.disconnectUser(io, socket);
