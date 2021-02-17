@@ -5,9 +5,7 @@ var app = express();
 var server = require('http').createServer(app);
 
 var io = require('socket.io')(server);
-io.configure(function() {
-  io.set('transports', ['websocket', 'xhr-polling']);
-});
+
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.get('/', (req, res) => {
