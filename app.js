@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/game.html');
 });
 
-server.listen(process.env.port)
+app.listen(process.env.port)
 
 game_server = require('./gameServer')
 
