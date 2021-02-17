@@ -8,8 +8,6 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/game.html');
 });
 
-var server = require('http').createServer(app);
-
 /*const credentials = {
   key: fs.readFileSync('certificate/key.pem'),
   cert: fs.readFileSync('certificate/cert.pem')
@@ -23,7 +21,14 @@ server.listen({ port: process.env.PORT, host: process.env.HOST}, () => {
 
 app.listen(process.env.port)
 
-var io = require('socket.io')(server);
+var server = http.createServer(app);
+
+server.listen(port, function () {
+  var addr = server.address();
+  console.log('   app listening on http://' + addr.address + ':' + addr.port);
+});
+
+var io = require('socket.io').listen(server);
 io.configure(function() {
   io.set('transports', ['websocket', 'xhr-polling']);
 });
