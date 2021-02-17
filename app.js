@@ -10,8 +10,8 @@ app.get('/', (req, res) => {
 
 app.listen(process.env.port)
 
-/*var io = require('socket.io').listen(app);
-io.configure(function() {
+var io = require('socket.io').listen(app);
+/*io.configure(function() {
   io.set('transports', ['websocket', 'xhr-polling']);
 });*/
 
@@ -29,7 +29,7 @@ function getPresetWords() {
 game_server.successfulGuessUpdate = uploadGameData;
 game_server.getPresetWords = getPresetWords;
 
-/*io.on('connection', (socket) => {
+io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     game_server.disconnectUser(io, socket);
   });
