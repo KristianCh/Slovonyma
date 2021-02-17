@@ -61,6 +61,10 @@ game_server.lema = async function(io, socket, text, type) {
 
 game_server.decideRoles = function(io, socket) {
     var guesserIndex = Math.round(Math.random());
+    if (game_server.gameRooms[socket.room].prevGuesserIndex !== -1) {
+        guesserIndex = 1 - game_server.gameRooms[socket.room].prevGuesserIndex;
+    }
+    game_server.gameRooms[socket.room].prevGuesserIndex = guesserIndex;
     game_server.gameRooms[socket.room].guesser = game_server.gameRooms[socket.room].users[guesserIndex];
     game_server.gameRooms[socket.room].describer = game_server.gameRooms[socket.room].users[Math.abs(guesserIndex-1)];
     game_server.gameRooms[socket.room].state = 'waiting_for_word_select';
@@ -103,6 +107,15 @@ game_server.connectUserToRoom = function (io, socket, data, callback) {
         callback({id:4, room:data.room});
         return;
     }
+
+    for (gameRoom in game_server.gameRooms) {
+        console.log(game_server.gameRooms[gameRoom]);
+        if (game_server.gameRooms[gameRoom].users.includes(data.name)) {
+            callback({id: 5, room: data.room});
+            return;
+        }
+    }
+
     //ak nebolo zadane id miestnosti, vygeneruje nahodne
     if (data.room === '') {
         do {
@@ -131,7 +144,7 @@ game_server.connectUserToRoom = function (io, socket, data, callback) {
         }
         priv = true;
     }
-    //zistuje sa, ci zadana miestnost neexituje alebo je v nej miesto
+    //zistuje sa, ci zadana miestnost neexistuje alebo je v nej miesto
     if((game_server.gameRooms[data.room] === undefined || game_server.gameRooms[data.room].users.length < PLAYERS_NUM)) {
         //povoluje pripojenie
         callback({id:0, room:data.room});
@@ -148,7 +161,7 @@ game_server.connectUserToRoom = function (io, socket, data, callback) {
     //ak miestnost nebola vytvorena, vytvori miestnost a prida do nej pouzivatela
     if (game_server.gameRooms[data.room] === undefined) {
         game_server.gameRooms[data.room] = {private: priv, users: [data.name], state: 'waiting_for_second', guessedWords: {},
-            hints: [], guesserPoints: 0, describerPoints: 0, hintsLeft: 10, guessesLeft: 10, ratedWords: 0};
+            hints: [], guesserPoints: 0, describerPoints: 0, hintsLeft: 10, guessesLeft: 10, ratedWords: 0, prevGuesserIndex: -1};
     }
     //ak miestnost bola vytvorena, tak do nej prida pouzivatela
     else {

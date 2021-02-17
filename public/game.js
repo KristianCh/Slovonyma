@@ -4,11 +4,14 @@ function leave() {
 
 $(function () {
     var socket = io();
-    const callbackAlerts = ["Miestnosť je plná", "Nenašla sa voľná  miestnosť", "Miestnosť s týmto kódom už existuje", "Musíš byť prihlásený"];
+    const callbackAlerts = ["Miestnosť je plná", "Nenašla sa voľná  miestnosť", "Miestnosť s týmto kódom už existuje", "Musíš byť prihlásený",
+        "Nemôžeš hrať dva krát naraz"];
     var role = '';
+    var word = '';
+    var hintLength = 3 + Math.floor(Math.random() * Math.floor(3));
+    document.getElementById("hint-length").innerHTML = 'Zadaj indíciu ' + ['s tromi', 'so štyrmi', 's piatimi'][hintLength-3] + ' slovami';
 
     socket.emit('request leaderboard', '');
-    console.log('sent request');
 
     if (sessionStorage.getItem("name") !== null) document.getElementById("login").style.display = "none";
 
@@ -107,6 +110,7 @@ $(function () {
                 document.getElementById("word-select-button").style.display = "none";
                 document.getElementById("loader").style.display = "block";
                 socket.emit('select word', $('#word').val());
+                word = $('#word').val();
                 $('#word').val('');
             } else {
                 document.getElementById("alert-word").innerHTML = "Musíš zadať slovo";
@@ -116,6 +120,7 @@ $(function () {
             document.getElementById("word-select-button").style.display = "none";
             document.getElementById("loader").style.display = "block";
             socket.emit('select word', e.originalEvent.submitter.value);
+            word = e.originalEvent.submitter.value;
             $('#word').val('');
         }
         return false;
@@ -123,8 +128,24 @@ $(function () {
 
     $('#hint-form').submit(function(e){
         e.preventDefault(); // prevents page reloading
-        if ($('#hint').val() !== '') {
+        if (hintLength === $('#hint').val().split(" ").length) {
+            var stringToCheck = $('#hint').val().replace(/[^a-zA-Z\u00C0-\uFFFF]/gu, '');
+            var wordToFind = word;
+            do {
+                if (new RegExp(wordToFind, 'iu').test(stringToCheck)) {
+                    document.getElementById("alert-hint").innerHTML = 'Indícia nesmie obsahovať hádané slovo ani jeho časť!';
+                    $('#hint').val('');
+                    return false;
+                }
+                wordToFind = wordToFind.slice(0,wordToFind.length-1);
+            } while (wordToFind.length > 3);
             socket.emit('hint submit', $('#hint').val());
+            hintLength = 3 + Math.floor(Math.random() * Math.floor(3));
+            document.getElementById("hint-length").innerHTML = 'Zadaj indíciu ' + ['s tromi', 'so štyrmi', 's piatimi'][hintLength-3] +
+                ' slovami';
+        }
+        else {
+            document.getElementById("alert-hint").innerHTML = 'Indícia musí mať ' + ['tri slová!', 'štyri slová!', 'päť slov!'][hintLength-3];
         }
         $('#hint').val('');
         return false;
@@ -182,7 +203,7 @@ $(function () {
                 document.getElementById("guess-form").style.display = "none";
                 document.getElementById("hint-form").style.display = "block";
                 document.getElementById("top-bar").innerHTML = '<h1 id="word-display">  </h1> <br>' +
-                    'Zostávajúce nápovedy: ' + msg.hintsLeft + ' Zostávajúce hádania: ' + msg.guessesLeft +
+                    'Zostávajúce nápovedy: ' + msg.hintsLeft + '<br> Zostávajúce hádania: ' + msg.guessesLeft +
                     '<br> Skóre: ' + msg.describerPoints;
                 document.getElementById("word-display").innerHTML = msg.word;
             }
@@ -285,7 +306,6 @@ $(function () {
     });
 
     socket.on('preset words', function(words){
-        console.log(words);
         document.getElementById("preset_word_1").innerHTML = words[0];
         document.getElementById("preset_word_1").value = words[0];
         document.getElementById("preset_word_2").innerHTML = words[1];
