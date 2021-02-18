@@ -3,7 +3,6 @@ function leave() {
 }
 
 $(function () {
-    console.log('requesting leaderboard');
     var socket = io({transports:['websocket']});
     const callbackAlerts = ["Miestnosť je plná", "Nenašla sa voľná  miestnosť", "Miestnosť s týmto kódom už existuje", "Musíš byť prihlásený",
         "Nemôžeš hrať dva krát naraz"];
@@ -12,9 +11,7 @@ $(function () {
     var hintLength = 3 + Math.floor(Math.random() * Math.floor(3));
     document.getElementById("hint-length").innerHTML = 'Zadaj indíciu ' + ['s tromi', 'so štyrmi', 's piatimi'][hintLength-3] + ' slovami';
 
-    console.log('requesting leaderboard');
     socket.emit('request leaderboard', '');
-    console.log('done requesting leaderboard');
 
     if (sessionStorage.getItem("name") !== null) document.getElementById("login").style.display = "none";
 
@@ -131,7 +128,6 @@ $(function () {
 
     $('#hint-form').submit(function(e) {
         e.preventDefault(); // prevents page reloading
-        console.log(role);
         if ($('#hint').val().split(" ").length <= 50 && role === 'describer') {
             if (hintLength === $('#hint').val().split(" ").length) {
                 var stringToCheck = $('#hint').val().replace(/[^a-zA-Z\u00C0-\uFFFF]/gu, '');
