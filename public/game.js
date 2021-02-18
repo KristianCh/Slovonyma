@@ -131,6 +131,7 @@ $(function () {
 
     $('#hint-form').submit(function(e) {
         e.preventDefault(); // prevents page reloading
+        console.log(role);
         if ($('#hint').val().split(" ").length <= 50 && role === 'describer') {
             if (hintLength === $('#hint').val().split(" ").length) {
                 var stringToCheck = $('#hint').val().replace(/[^a-zA-Z\u00C0-\uFFFF]/gu, '');
