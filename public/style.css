@@ -285,6 +285,8 @@ button:hover {
 }
 
 .rate-li--2 {
+    border-style: solid;
+    border-width: 2px;
     background-color: rgb(255, 0, 0);
 }
 
