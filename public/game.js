@@ -131,7 +131,7 @@ $(function () {
 
     $('#hint-form').submit(function(e) {
         e.preventDefault(); // prevents page reloading
-        if ($('#hint').val().split(" ").length <= 50) {
+        if ($('#hint').val().split(" ").length <= 50 && role === 'describer') {
             if (hintLength === $('#hint').val().split(" ").length) {
                 var stringToCheck = $('#hint').val().replace(/[^a-zA-Z\u00C0-\uFFFF]/gu, '');
                 var wordToFind = word;
@@ -160,7 +160,7 @@ $(function () {
 
     $('#guess-form').submit(function(e){
         e.preventDefault(); // prevents page reloading
-        if ($('#guess').val() !== '') {
+        if ($('#guess').val() !== '' && role === 'guesser') {
             socket.emit('guess submit', $('#guess').val());
         }
         $('#guess').val('');
