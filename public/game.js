@@ -258,7 +258,7 @@ $(function () {
                 rating += 'Nie je slovo!';
             }
             else {
-                rating += ['Takmer identické', 'Veľmi podobné', 'Trochu podobné', 'Veľmi málo podobné', 'Úplne iné'][value.rating];
+                rating += ['Úplne iné', 'Veľmi málo podobné', 'Trochu podobné', 'Veľmi podobné', 'Takmer identické'][value.rating];
             }
             if (role === 'guesser' || value.rating !== -1) {
                 $('#guesses').append('<li style="background: rgb(255, 255, 255)">' + key + ': ' + rating);
@@ -275,7 +275,7 @@ $(function () {
                     document.createElement("BUTTON")];
 
                 for (var i = 4; i >= 0; i--) {
-                    buttons[i].innerHTML = ['Takmer identické', 'Veľmi podobné', 'Trochu podobné', 'Veľmi málo podobné', 'Úplne iné'][i];
+                    buttons[i].innerHTML = ['Úplne iné', 'Veľmi málo podobné', 'Trochu podobné', 'Veľmi podobné', 'Takmer identické'][i];
                     buttons[i].className = 'rate-button-' + i;
                     document.getElementById(key + "-line").appendChild(buttons[i]);
                 }
