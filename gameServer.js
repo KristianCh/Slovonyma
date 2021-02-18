@@ -9,7 +9,7 @@ game_server.successfulGuessUpdate = function(placeholder){};
 
 game_server.lema = async function(io, socket, text, type) {
 
-    let response = await fetch('http://127.0.0.1:8080/http://text.fiit.stuba.sk:8080/lematizer/services/lemmatizer/lemmatize/fast', {
+    let response = await fetch(/*'http://127.0.0.1:8080/'*/'http://text.fiit.stuba.sk:8080/lematizer/services/lemmatizer/lemmatize/fast', {
         method: 'POST',
         mode: 'cors',
         headers: {'Content-Type': 'text/plain;charset=UTF-8'},
