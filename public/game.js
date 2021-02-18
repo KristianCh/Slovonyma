@@ -261,7 +261,7 @@ $(function () {
                 rating += ['Úplne iné', 'Veľmi málo podobné', 'Trochu podobné', 'Veľmi podobné', 'Takmer identické'][value.rating];
             }
             if (role === 'guesser' || value.rating !== -1) {
-                $('#guesses').append('<li class="rate-button-' + value.rating + '" style="background: rgb(255, 255, 255)">' + key + ': ' + rating);
+                $('#guesses').append('<li class="rate-li-' + value.rating + '" style="background: rgb(255, 255, 255)">' + key + ': ' + rating);
             }
             else {
                 $('#guesses').append('<li id="' + key + '-line">' + key + ': ');
