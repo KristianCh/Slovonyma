@@ -126,26 +126,30 @@ $(function () {
         return false;
     });
 
-    $('#hint-form').submit(function(e){
+    $('#hint-form').submit(function(e) {
         e.preventDefault(); // prevents page reloading
-        if (hintLength === $('#hint').val().split(" ").length) {
-            var stringToCheck = $('#hint').val().replace(/[^a-zA-Z\u00C0-\uFFFF]/gu, '');
-            var wordToFind = word;
-            do {
-                if (new RegExp(wordToFind, 'iu').test(stringToCheck)) {
-                    document.getElementById("alert-hint").innerHTML = 'Indícia nesmie obsahovať hádané slovo ani jeho časť!';
-                    $('#hint').val('');
-                    return false;
-                }
-                wordToFind = wordToFind.slice(0,wordToFind.length-1);
-            } while (wordToFind.length > 3);
-            socket.emit('hint submit', $('#hint').val());
-            hintLength = 3 + Math.floor(Math.random() * Math.floor(3));
-            document.getElementById("hint-length").innerHTML = 'Zadaj indíciu ' + ['s tromi', 'so štyrmi', 's piatimi'][hintLength-3] +
-                ' slovami';
+        if ($('#hint').val().length <= 50 && role === 'describer') {
+            if (hintLength === $('#hint').val().split(" ").length) {
+                var stringToCheck = $('#hint').val().replace(/[^a-zA-Z\u00C0-\uFFFF]/gu, '');
+                var wordToFind = word;
+                do {
+                    if (new RegExp(wordToFind, 'iu').test(stringToCheck)) {
+                        document.getElementById("alert-hint").innerHTML = 'Indícia nesmie obsahovať hádané slovo ani jeho časť!';
+                        $('#hint').val('');
+                        return false;
+                    }
+                    wordToFind = wordToFind.slice(0, wordToFind.length - 1);
+                } while (wordToFind.length > 3);
+                socket.emit('hint submit', $('#hint').val());
+                hintLength = 3 + Math.floor(Math.random() * Math.floor(3));
+                document.getElementById("hint-length").innerHTML = 'Zadaj indíciu ' + ['s tromi', 'so štyrmi', 's piatimi'][hintLength - 3] +
+                    ' slovami';
+            } else {
+                document.getElementById("alert-hint").innerHTML = 'Indícia musí mať ' + ['tri slová!', 'štyri slová!', 'päť slov!'][hintLength - 3];
+            }
         }
         else {
-            document.getElementById("alert-hint").innerHTML = 'Indícia musí mať ' + ['tri slová!', 'štyri slová!', 'päť slov!'][hintLength-3];
+            document.getElementById("alert-hint").innerHTML = 'Indícia musí byť kratšia ako 50 znakov!';
         }
         $('#hint').val('');
         return false;
@@ -153,7 +157,7 @@ $(function () {
 
     $('#guess-form').submit(function(e){
         e.preventDefault(); // prevents page reloading
-        if ($('#guess').val() !== '') {
+        if ($('#guess').val() !== '' && role === 'guesser') {
             socket.emit('guess submit', $('#guess').val());
         }
         $('#guess').val('');
@@ -251,10 +255,10 @@ $(function () {
                 rating += 'Nie je slovo!';
             }
             else {
-                rating += value.rating;
+                rating += ['Úplne iné', 'Veľmi málo podobné', 'Trochu podobné', 'Veľmi podobné', 'Takmer identické'][value.rating];
             }
             if (role === 'guesser' || value.rating !== -1) {
-                $('#guesses').append('<li style="background: rgb(255, 255, 255)">' + key + ': ' + rating);
+                $('#guesses').append('<li class="rate-li-' + value.rating + '" style="background: rgb(255, 255, 255)">' + key + ': ' + rating);
             }
             else {
                 $('#guesses').append('<li id="' + key + '-line">' + key + ': ');
@@ -268,13 +272,13 @@ $(function () {
                     document.createElement("BUTTON")];
 
                 for (var i = 4; i >= 0; i--) {
-                    buttons[i].innerHTML = i;
+                    buttons[i].innerHTML = ['Úplne iné', 'Veľmi málo podobné', 'Trochu podobné', 'Veľmi podobné', 'Takmer identické'][i];
                     buttons[i].className = 'rate-button-' + i;
                     document.getElementById(key + "-line").appendChild(buttons[i]);
                 }
 
-                buttons[5].innerHTML = '❌';
-                buttons[5].className = 'rate-button-reject';
+                buttons[5].innerHTML = 'Nie je slovo!';
+                buttons[5].className = 'rate-button--2';
                 document.getElementById(key + "-line").appendChild(buttons[5]);
 
                 buttons[0].onclick = function () {
