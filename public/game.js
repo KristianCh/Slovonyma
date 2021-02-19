@@ -128,7 +128,7 @@ $(function () {
 
     $('#hint-form').submit(function(e) {
         e.preventDefault(); // prevents page reloading
-        if ($('#hint').val().split(" ").length <= 50 && role === 'describer') {
+        if ($('#hint').val().length <= 50 && role === 'describer') {
             if (hintLength === $('#hint').val().split(" ").length) {
                 var stringToCheck = $('#hint').val().replace(/[^a-zA-Z\u00C0-\uFFFF]/gu, '');
                 var wordToFind = word;
@@ -149,7 +149,7 @@ $(function () {
             }
         }
         else {
-            document.getElementById("alert-hint").innerHTML = 'Indícia musí byť kratšia ako 50 slov!';
+            document.getElementById("alert-hint").innerHTML = 'Indícia musí byť kratšia ako 50 znakov!';
         }
         $('#hint').val('');
         return false;
