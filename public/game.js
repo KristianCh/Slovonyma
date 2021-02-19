@@ -33,6 +33,10 @@ $(function () {
 
     $('#join-form').submit(function (e) {
         e.preventDefault(); // prevents page reloading
+        if (sessionStorage.getItem("name") !== null && sessionStorage.getItem("name") !== '') {
+            document.getElementById("alert-join").innerHTML = callbackAlerts[3];
+            return false;
+        }
         var roomId = $('#room').val();
         socket.emit('join room', {name: sessionStorage.getItem("name"), room:roomId, type:e.originalEvent.submitter.value}, (callback) => {
             if (callback.id === 0) {
