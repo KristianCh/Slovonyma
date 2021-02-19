@@ -33,7 +33,8 @@ $(function () {
 
     $('#join-form').submit(function (e) {
         e.preventDefault(); // prevents page reloading
-        if (sessionStorage.getItem("name") !== null && sessionStorage.getItem("name") !== '') {
+        if (sessionStorage.getItem("name") === null ||
+            sessionStorage.getItem("name") === null && sessionStorage.getItem("name") !== '') {
             document.getElementById("alert-join").innerHTML = callbackAlerts[3];
             return false;
         }
