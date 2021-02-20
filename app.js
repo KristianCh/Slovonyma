@@ -71,6 +71,12 @@ io.on('connection', (socket) => {
   socket.on('replay', ()=> {
     game_server.replay(io, socket);
   });
+  socket.on('show typing hint', (data)=>{
+    game_server.showTypingHint(io, socket, data);
+  });
+  socket.on('show typing guess', (data)=>{
+    game_server.showTypingGuess(io, socket, data);
+  });
   socket.on('request leaderboard', (filterName)=> {
     //tu sa z databazy nacitaju udaje o hracoch
     scores = [

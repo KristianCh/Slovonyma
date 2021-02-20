@@ -8,6 +8,20 @@ $(function () {
         "Nemôžeš hrať dva krát naraz"];
     var role = '';
     var word = '';
+    var typingHint = false;
+    var timeoutHint = undefined;
+    var typingGuess = false;
+    var timeoutGuess = undefined;
+
+    var typingTimeoutHint = function () {
+        socket.emit('show typing hint', {user:sessionStorage.getItem("name"), typing:false})
+        typingHint = false;
+    }
+    var typingTimeoutGuess = function () {
+        socket.emit('show typing guess', {user:sessionStorage.getItem("name"), typing:false})
+        typingGuess = false;
+    }
+
     var hintLength = 3 + Math.floor(Math.random() * Math.floor(3));
     document.getElementById("hint-length").innerHTML = 'Zadaj indíciu ' + ['s tromi', 'so štyrmi', 's piatimi'][hintLength-3] + ' slovami';
 
@@ -189,6 +203,28 @@ $(function () {
         socket.emit('request leaderboard', $('#search-player-name').val());
     });
 
+    $('#hint').keypress((e)=>{
+        if(e.which!=13){
+            if (!typingHint) {
+                socket.emit('show typing hint', {user:sessionStorage.getItem("name"), typing:true})
+            }
+            typingHint = true
+            clearTimeout(timeoutHint)
+            timeoutHint = setTimeout(typingTimeoutHint, 3000);
+        }
+    });
+
+    $('#guess').keypress((e)=>{
+        if(e.which!=13){
+            if (!typingGuess) {
+                socket.emit('show typing guess', {user:sessionStorage.getItem("name"), typing:true})
+            }
+            typingGuess = true
+            clearTimeout(timeoutGuess)
+            timeoutGuess = setTimeout(typingTimeoutGuess, 3000);
+        }
+    });
+
     socket.on('update state', function(msg){
         $('#users').empty();
         document.getElementById("u").innerHTML = "Pripojení používatelia " + msg.users.length + "/" + 2;
@@ -252,6 +288,10 @@ $(function () {
     socket.on('update hints', function(hint){
         $('#hints').append('<li style="background: rgb(255, 255, 255)">' + hint);
         $('#hints').animate({scrollTop: $('#hints').prop("scrollHeight")}, 1);
+    });
+
+    socket.on('update active', function(active){
+        document.getElementById("active-rooms").innerHTML = 'Aktívne miestnosti: ' + active;
     });
 
     socket.on('update guesses', function(guesses){
@@ -349,5 +389,19 @@ $(function () {
                 '  </tr>'
             );
         });
+    });
+
+    socket.on('show typing hint', (data)=>{
+        if(data.typing === true && role === 'guesser')
+            document.getElementById("typing-display-hint").innerHTML = sessionStorage.getItem("name") + ' píše...';
+        else
+            document.getElementById("typing-display-hint").innerHTML = '';
+    });
+
+    socket.on('show typing guess', (data)=>{
+        if(data.typing === true && role === 'describer')
+            document.getElementById("typing-display-guess").innerHTML = sessionStorage.getItem("name") + ' píše...';
+        else
+            document.getElementById("typing-display-guess").innerHTML = '';
     });
 });
