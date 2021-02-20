@@ -98,6 +98,7 @@ game_server.disconnectUser = function (io, socket) {
         //ak je miestnost po odpojeni pouzivatela prazdna, tak ju vymaze
         if (game_server.gameRooms[socket.room].users.length === 0) {
             delete game_server.gameRooms[socket.room];
+            socket.broadcast.emit("update active", game_server.gameRooms.length);
         }
     }
 }
@@ -162,6 +163,7 @@ game_server.connectUserToRoom = function (io, socket, data, callback) {
     if (game_server.gameRooms[data.room] === undefined) {
         game_server.gameRooms[data.room] = {private: priv, users: [data.name], state: 'waiting_for_second', guessedWords: {},
             hints: [], guesserPoints: 0, describerPoints: 0, hintsLeft: 10, guessesLeft: 10, ratedWords: 0, prevGuesserIndex: -1};
+        socket.broadcast.emit("update active", game_server.gameRooms.length);
     }
     //ak miestnost bola vytvorena, tak do nej prida pouzivatela
     else {

@@ -254,6 +254,10 @@ $(function () {
         $('#hints').animate({scrollTop: $('#hints').prop("scrollHeight")}, 1);
     });
 
+    socket.on('update active', function(active){
+        document.getElementById("active-rooms").innerHTML = 'Aktívne miestnosti: ' + active;
+    });
+
     socket.on('update guesses', function(guesses){
         $('#guesses').empty();
         for (const [key, value] of Object.entries(guesses)) {
