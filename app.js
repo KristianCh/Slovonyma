@@ -22,7 +22,6 @@ game_server = require('./gameServer')
 
 function uploadGameData(data) {
   //tu sa nahraju udaje z hry do databazy
-  console.log(data);
 }
 
 function getPresetWords() {
