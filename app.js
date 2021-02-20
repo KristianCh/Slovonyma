@@ -10,6 +10,10 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/game.html');
 });
 
+app.get('/ako-hrat', (req, res) => {
+  res.sendFile(__dirname + '/public/how_to_play.html');
+});
+
 const credentials = {
   key: fs.readFileSync('certificate/key.pem'),
   cert: fs.readFileSync('certificate/cert.pem')
