@@ -239,3 +239,7 @@ game_server.replay = function (io, socket) {
 game_server.displayLeaderboard = function (io, socket, scores) {
     socket.emit('display leaderboard', scores);
 }
+
+game_server.showTyping = function (io, socket, data) {
+    io.emit('show typing', data);
+}

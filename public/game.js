@@ -8,6 +8,8 @@ $(function () {
         "Nemôžeš hrať dva krát naraz"];
     var role = '';
     var word = '';
+    var typing=false;
+    var timeout=undefined;
     var hintLength = 3 + Math.floor(Math.random() * Math.floor(3));
     document.getElementById("hint-length").innerHTML = 'Zadaj indíciu ' + ['s tromi', 'so štyrmi', 's piatimi'][hintLength-3] + ' slovami';
 
@@ -189,6 +191,15 @@ $(function () {
         socket.emit('request leaderboard', $('#search-player-name').val());
     });
 
+    $('#hint').keypress((e)=>{
+        if(e.which!=13){
+            typing=true
+            socket.emit('typing', {user:sessionStorage.getItem("name"), typing:true})
+            clearTimeout(timeout)
+            timeout=setTimeout(typingTimeout, 3000)
+        }
+    })
+
     socket.on('update state', function(msg){
         $('#users').empty();
         document.getElementById("u").innerHTML = "Pripojení používatelia " + msg.users.length + "/" + 2;
@@ -353,5 +364,12 @@ $(function () {
                 '  </tr>'
             );
         });
+    });
+
+    socket.on('show typing', (data)=>{
+        if(data.typing === true)
+            document.getElementById("preset_word_3").innerHTML = sessionStorage.getItem("name") + ' píše...';
+        else
+            document.getElementById("preset_word_3").innerHTML = '';
     });
 });
