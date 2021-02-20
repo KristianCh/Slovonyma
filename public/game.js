@@ -110,8 +110,8 @@ $(function () {
 
     $('#word-select-form').submit(function (e) {
         e.preventDefault(); // prevents page reloading
-        if (e.originalEvent.submitter.value === '' && $('#word').val().split(" ").length === 1) {
-            if ($('#word').val() !== '') {
+        if (e.originalEvent.submitter.value === '') {
+            if ($('#word').val() !== '' && $('#word').val().split(" ").length === 1) {
                 document.getElementById("word-select-button").style.display = "none";
                 document.getElementById("loader").style.display = "block";
                 socket.emit('select word', $('#word').val());
