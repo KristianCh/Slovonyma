@@ -110,15 +110,16 @@ $(function () {
 
     $('#word-select-form').submit(function (e) {
         e.preventDefault(); // prevents page reloading
-        if (e.originalEvent.submitter.value === '') {
-            if ($('#word').val() !== '') {
+        if (e.originalEvent.submitter.value === '' ) {
+            if ($('#word').val() !== '' && $('#word').val().split(" ").length === 1) {
                 document.getElementById("word-select-button").style.display = "none";
                 document.getElementById("loader").style.display = "block";
                 socket.emit('select word', $('#word').val());
                 word = $('#word').val();
                 $('#word').val('');
+                document.getElementById("alert-word").innerHTML = '';
             } else {
-                document.getElementById("alert-word").innerHTML = "Musíš zadať slovo";
+                document.getElementById("alert-word").innerHTML = "Musíš zadať jedno slovo";
             }
         }
         else {
@@ -162,8 +163,12 @@ $(function () {
 
     $('#guess-form').submit(function(e){
         e.preventDefault(); // prevents page reloading
-        if ($('#guess').val() !== '' && role === 'guesser') {
-            socket.emit('guess submit', $('#guess').val());
+        if (role === 'guesser') {
+            if ($('#guess').val() !== '' && $('#guess').val().split(" ").length === 1) {
+                socket.emit('guess submit', $('#guess').val());
+                document.getElementById("alert-guess").innerHTML = '';
+            }
+            else document.getElementById("alert-guess").innerHTML = "Musíš zadať jedno slovo";
         }
         $('#guess').val('');
         return false;
