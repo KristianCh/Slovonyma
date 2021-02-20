@@ -8,8 +8,19 @@ $(function () {
         "Nemôžeš hrať dva krát naraz"];
     var role = '';
     var word = '';
-    var typing=false;
-    var timeout=undefined;
+    var typingHint = false;
+    var timeoutHint = undefined;
+    var typingGuess = false;
+    var timeoutGuess = undefined;
+
+    var typingTimeoutHint = function () {
+        socket.emit('show typing hint', {user:sessionStorage.getItem("name"), typing:false})
+        typingHint = false;
+    }
+    var typingTimeoutGuess = function () {
+        socket.emit('show typing guess', {user:sessionStorage.getItem("name"), typing:false})
+        typingGuess = false;
+    }
     var hintLength = 3 + Math.floor(Math.random() * Math.floor(3));
     document.getElementById("hint-length").innerHTML = 'Zadaj indíciu ' + ['s tromi', 'so štyrmi', 's piatimi'][hintLength-3] + ' slovami';
 
@@ -193,12 +204,25 @@ $(function () {
 
     $('#hint').keypress((e)=>{
         if(e.which!=13){
-            typing=true
-            socket.emit('typing', {user:sessionStorage.getItem("name"), typing:true})
-            clearTimeout(timeout)
-            timeout=setTimeout(typingTimeout, 3000)
+            if (!typingHint) {
+                socket.emit('show typing hint', {user:sessionStorage.getItem("name"), typing:true})
+            }
+            typingHint = true
+            clearTimeout(timeoutHint)
+            timeoutHint = setTimeout(typingTimeoutHint, 3000);
         }
-    })
+    });
+
+    $('#guess').keypress((e)=>{
+        if(e.which!=13){
+            if (!typingGuess) {
+                socket.emit('show typing guess', {user:sessionStorage.getItem("name"), typing:true})
+            }
+            typingGuess = true
+            clearTimeout(timeoutGuess)
+            timeoutGuess = setTimeout(typingTimeoutGuess, 3000);
+        }
+    });
 
     socket.on('update state', function(msg){
         $('#users').empty();
@@ -366,10 +390,17 @@ $(function () {
         });
     });
 
-    socket.on('show typing', (data)=>{
-        if(data.typing === true)
-            document.getElementById("preset_word_3").innerHTML = sessionStorage.getItem("name") + ' píše...';
+    socket.on('show typing hint', (data)=>{
+        if(data.typing === true && role === 'guesser')
+            document.getElementById("typing-display-hint").innerHTML = sessionStorage.getItem("name") + ' píše...';
         else
-            document.getElementById("preset_word_3").innerHTML = '';
+            document.getElementById("typing-display-hint").innerHTML = '';
+    });
+
+    socket.on('show typing guess', (data)=>{
+        if(data.typing === true && role === 'describer')
+            document.getElementById("typing-display-guess").innerHTML = sessionStorage.getItem("name") + ' píše...';
+        else
+            document.getElementById("typing-display-guess").innerHTML = '';
     });
 });

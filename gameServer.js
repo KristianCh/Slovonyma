@@ -240,6 +240,10 @@ game_server.displayLeaderboard = function (io, socket, scores) {
     socket.emit('display leaderboard', scores);
 }
 
-game_server.showTyping = function (io, socket, data) {
-    io.emit('show typing', data);
+game_server.showTypingHint = function (io, socket, data) {
+    io.in(socket.room).emit('show typing hint', data);
+}
+
+game_server.showTypingGuess = function (io, socket, data) {
+    io.in(socket.room).emit('show typing guess', data);
 }
