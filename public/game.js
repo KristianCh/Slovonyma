@@ -225,7 +225,7 @@ $(function () {
                 document.getElementById("wait-for-word-select-message").style.display = "none";
                 document.getElementById("hint-form").style.display = "none";
                 document.getElementById("guess-form").style.display = "block";
-                document.getElementById("top-bar").innerHTML = 'Zostávajúce indície: ' + msg.hintsLeft + ' Zostávajúce hádania: ' + msg.guessesLeft +
+                document.getElementById("top-bar").innerHTML = 'Zostávajúce indície: ' + msg.hintsLeft + '<br> Zostávajúce hádania: ' + msg.guessesLeft +
                     '<br> Skóre: ' + msg.guesserPoints;
             }
         }
