@@ -370,7 +370,7 @@ $(function () {
     });
 
     socket.on('other disconnected', function(){
-        if (role === 'describer' && sessionStorage.getItem("sound") !== 'off') document.getElementById('notification').play();
+        if (sessionStorage.getItem("sound") !== 'off') document.getElementById('notification').play();
         location.reload();
         alert("Druhý hráč sa odpojil");
     });
