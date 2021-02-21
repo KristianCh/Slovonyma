@@ -237,6 +237,24 @@ button:hover {
     background-color: rgb(250, 205, 138);
 }
 
+.sound-button-on {
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 25px;
+    color: black;
+
+    position: relative;
+    float: right;
+}
+
+.sound-button-off {
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 25px;
+    color: #AAAAAA;
+
+    position: relative;
+    float: right;
+}
+
 .rate-button-0 {
     border-style: solid;
     border-width: 1px;

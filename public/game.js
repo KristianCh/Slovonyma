@@ -22,6 +22,17 @@ $(function () {
         typingGuess = false;
     }
 
+    document.getElementById("sound-btn").onclick = function () {
+        if (sessionStorage.getItem("sound") !== 'off') {
+            sessionStorage.setItem("sound", 'off');
+            document.getElementById("sound-btn").className = 'sound-button-off';
+        }
+        else {
+            sessionStorage.setItem("sound", 'on');
+            document.getElementById("sound-btn").className = 'sound-button-on';
+        }
+    }
+
     var hintLength = 3 + Math.floor(Math.random() * Math.floor(3));
     document.getElementById("hint-length").innerHTML = 'Zadaj indíciu ' + ['s tromi', 'so štyrmi', 's piatimi'][hintLength-3] + ' slovami';
 
@@ -161,6 +172,7 @@ $(function () {
                     wordToFind = wordToFind.slice(0, wordToFind.length - 1);
                 } while (wordToFind.length > 3);
                 socket.emit('hint submit', $('#hint').val());
+                document.getElementById("alert-hint").innerHTML = '';
                 hintLength = 3 + Math.floor(Math.random() * Math.floor(3));
                 document.getElementById("hint-length").innerHTML = 'Zadaj indíciu ' + ['s tromi', 'so štyrmi', 's piatimi'][hintLength - 3] +
                     ' slovami';
@@ -266,6 +278,7 @@ $(function () {
             }
         }
         else if (msg.state === 'game_finished') {
+            if (sessionStorage.getItem("sound") !== 'off') document.getElementById('finish').play();
             $('#guesses').empty();
             $('#hints').empty();
             document.getElementById("top-bar").style.display = "none";
@@ -286,6 +299,7 @@ $(function () {
     });
 
     socket.on('update hints', function(hint){
+        if (role === 'guesser' && sessionStorage.getItem("sound") !== 'off') document.getElementById('notification').play();
         $('#hints').append('<li style="background: rgb(255, 255, 255)">' + hint);
         $('#hints').animate({scrollTop: $('#hints').prop("scrollHeight")}, 1);
     });
@@ -295,6 +309,7 @@ $(function () {
     });
 
     socket.on('update guesses', function(guesses){
+        if (role === 'describer' && sessionStorage.getItem("sound") !== 'off') document.getElementById('notification').play();
         $('#guesses').empty();
         for (const [key, value] of Object.entries(guesses)) {
             var rating = ''
@@ -355,6 +370,7 @@ $(function () {
     });
 
     socket.on('other disconnected', function(){
+        if (role === 'describer' && sessionStorage.getItem("sound") !== 'off') document.getElementById('notification').play();
         location.reload();
         alert("Druhý hráč sa odpojil");
     });
