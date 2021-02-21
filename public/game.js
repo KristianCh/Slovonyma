@@ -56,7 +56,7 @@ $(function () {
         socket.emit('join room', {name: sessionStorage.getItem("name"), room:roomId, type:e.originalEvent.submitter.value}, (callback) => {
             if (callback.id === 0) {
 
-                document.getElementById("nick-set").style.display = "none";
+                document.getElementById("room-set").style.display = "none";
                 document.getElementById("login").style.display = "none";
                 document.getElementById("leaderboard").style.display = "none";
                 document.getElementById("menu-content").style.display = 'none';
