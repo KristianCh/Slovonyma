@@ -2,6 +2,9 @@ const express = require('express');
 const path = require('path');
 const https = require('https');
 const fs = require('fs');
+const bcrypt = require('bcrypt');
+const util = require('util');
+var sql = require("mssql");
 
 var app = express();
 
@@ -29,8 +32,64 @@ var io = require('socket.io')(server);
 
 game_server = require('./gameServer')
 
+var dbConfig = JSON.parse(fs.readFileSync('dbConfig.json'));
+console.log(dbConfig);
+
 function uploadGameData(data) {
   //tu sa nahraju udaje z hry do databazy
+}
+
+async function loginPlayer(socket, data, callback) {
+  var conn = new sql.ConnectionPool(dbConfig);
+
+  conn.connect()
+      // Successfull connection
+      .then(async function () {
+        var req = new sql.Request(conn);
+        var queryResult = await req.query(util.format("SELECT heslo FROM [dbo].[Hraci] WHERE prezyvka='%s'", data.name));
+        if (queryResult.recordset.length < 1) {
+          game_server.confirmLogin(io, socket, false, callback);
+          conn.close();
+          return;
+        }
+        bcrypt.compare(data.password, queryResult.recordset[0].heslo)
+            .then(result => {
+              game_server.confirmLogin(io, socket, result, callback);
+            });
+        conn.close();
+      })
+      // Handle connection errors
+      .catch(function (err) {
+        console.log(err);
+        conn.close();
+      });
+}
+
+async function registerNewPlayer(socket, data, callback) {
+  var conn = new sql.ConnectionPool(dbConfig);
+
+  conn.connect()
+      // Successfull connection
+      .then(async function () {
+
+        // Create request instance, passing in connection instance
+        var req = new sql.Request(conn);
+        var queryResult = await req.query(util.format("SELECT prezyvka FROM [dbo].[Hraci] WHERE prezyvka='%s'", data.name))
+
+        if (queryResult.recordset.length === 0) {
+          var hash = await bcrypt.hash(data.password, 5)
+          await req.query(util.format("INSERT INTO [dbo].[Hraci] (prezyvka, heslo, odohrane_hry, celkove_body)" +
+              "VALUES ('%s', '%s', 0, 0)", data.name, hash));
+          game_server.confirmLogin(io, socket, true, callback);
+        }
+        else game_server.confirmLogin(io, socket, false, callback);
+        conn.close();
+      })
+      // Handle connection errors
+      .catch(function (err) {
+        console.log(err);
+        conn.close();
+      });
 }
 
 function getPresetWords() {
@@ -49,13 +108,12 @@ io.on('connection', (socket) => {
     game_server.connectUserToRoom(io, socket, data, callback);
   });
   socket.on('login', (data, callback) => {
-    //tu bude overenie prihlasenia
-    game_server.confirmLogin(io, socket, !(data.name === ''), callback);
+    loginPlayer(socket, data, callback);
   });
   socket.on('register', (data, callback) => {
-    //tu bude overenie registracie
-    game_server.confirmLogin(io, socket, !(data.name === ''), callback);
+    registerNewPlayer(socket, data, callback);
   });
+
   socket.on('select word', (word) => {
     game_server.selectWord(io, socket, word);
   });

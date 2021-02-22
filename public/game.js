@@ -22,6 +22,10 @@ $(function () {
         typingGuess = false;
     }
 
+    var clearAlert = function(alertId) {
+        document.getElementById(alertId).innerHTML = '';
+    }
+
     document.getElementById("sound-btn").onclick = function () {
         if (sessionStorage.getItem("sound") !== 'off') {
             sessionStorage.setItem("sound", 'off');
@@ -61,6 +65,7 @@ $(function () {
         if (sessionStorage.getItem("name") === null ||
             sessionStorage.getItem("name") !== null && sessionStorage.getItem("name") === '') {
             document.getElementById("alert-join").innerHTML = callbackAlerts[3];
+            setTimeout(clearAlert, 3000, "alert-join");
             return false;
         }
         var roomId = $('#room').val();
@@ -77,6 +82,7 @@ $(function () {
             }
             else {
                 document.getElementById("alert-join").innerHTML = callbackAlerts[callback.id-1];
+                setTimeout(clearAlert, 3000, "alert-join");
             }
             document.getElementById("room_code").innerHTML = "Kód miestnosti: " + callback.room;
         });
@@ -87,21 +93,35 @@ $(function () {
         e.preventDefault(); // prevents page reloading
         if($('#pass').val() === '') {
             document.getElementById("alert-login").innerHTML = "Musíš zadať heslo";
+            setTimeout(clearAlert, 3000, "alert-login");
             return false;
         }
         if ($('#nick').val() !== '') {
+            if ($('#nick').val().split(" ").length !== 1) {
+                document.getElementById("alert-login").innerHTML = "Prezývka musí byť jedno slovo";
+                setTimeout(clearAlert, 3000, "alert-login");
+                return false;
+            }
+            if (/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test($('#nick').val())) {
+                document.getElementById("alert-login").innerHTML = 'Prezývka nesmie obsahovať špeciálne znaky';
+                setTimeout(clearAlert, 3000, "alert-login");
+                $('#nick').val('');
+                return false;
+            }
             socket.emit('login', {name: $('#nick').val(), password: $('#pass').val()}, (callback) => {
-                if (callback.allowed) {
+                if (callback.response) {
                     sessionStorage.setItem("name", $('#nick').val());
                     document.getElementById("login").style.display = "none";
                 }
                 else {
                     document.getElementById("alert-login").innerHTML = "Nesprávne prihlásenie";
+                    setTimeout(clearAlert, 3000, "alert-login");
                 }
             });
         }
         else {
             document.getElementById("alert-login").innerHTML = "Musíš zadať prezývku";
+            setTimeout(clearAlert, 3000, "alert-login");
         }
         return false;
     });
@@ -110,25 +130,40 @@ $(function () {
         e.preventDefault(); // prevents page reloading
         if($('#reg-pass').val() === '' || $('#reg-pass-confirm').val() === '') {
             document.getElementById("alert-register").innerHTML = "Musíš zadať heslo";
+            setTimeout(clearAlert, 3000, "alert-register");
             return false;
         }
         if($('#reg-pass').val() !== $('#reg-pass-confirm').val()) {
             document.getElementById("alert-register").innerHTML = "Heslá sa musia zhodovať";
+            setTimeout(clearAlert, 3000, "alert-register");
             return false;
         }
         if ($('#reg-nick').val() !== '') {
+            if ($('#reg-nick').val().split(" ").length !== 1) {
+                document.getElementById("alert-register").innerHTML = "Prezývka musí byť jedno slovo";
+                setTimeout(clearAlert, 3000, "alert-register");
+                return false;
+            }
+            if (/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test($('#reg-nick').val())) {
+                document.getElementById("alert-register").innerHTML = 'Prezývka nesmie obsahovať špeciálne znaky';
+                setTimeout(clearAlert, 3000, "alert-register");
+                $('#nick').val('');
+                return false;
+            }
             socket.emit('register', {name: $('#reg-nick').val(), password: $('#reg-pass').val()}, (callback) => {
-                if (callback.allowed) {
+                if (callback.response) {
                     sessionStorage.setItem("name", $('#reg-nick').val());
                     document.getElementById("login").style.display = "none";
                 }
                 else {
-                    document.getElementById("alert-register").innerHTML = "Nesprávne prihlásenie";
+                    document.getElementById("alert-register").innerHTML = "Prezývka už existuje";
+                    setTimeout(clearAlert, 3000, "alert-register");
                 }
             });
         }
         else {
             document.getElementById("alert-register").innerHTML = "Musíš zadať prezývku";
+            setTimeout(clearAlert, 3000, "alert-register");
         }
         return false;
     });
@@ -145,6 +180,7 @@ $(function () {
                 document.getElementById("alert-word").innerHTML = '';
             } else {
                 document.getElementById("alert-word").innerHTML = "Musíš zadať jedno slovo";
+                setTimeout(clearAlert, 3000, "alert-word");
             }
         }
         else {
@@ -166,6 +202,7 @@ $(function () {
                 do {
                     if (new RegExp(wordToFind, 'iu').test(stringToCheck)) {
                         document.getElementById("alert-hint").innerHTML = 'Indícia nesmie obsahovať hádané slovo ani jeho časť!';
+                        setTimeout(clearAlert, 3000, "alert-hint");
                         $('#hint').val('');
                         return false;
                     }
@@ -178,10 +215,12 @@ $(function () {
                     ' slovami';
             } else {
                 document.getElementById("alert-hint").innerHTML = 'Indícia musí mať ' + ['tri slová!', 'štyri slová!', 'päť slov!'][hintLength - 3];
+                setTimeout(clearAlert, 3000, "alert-hint");
             }
         }
         else {
             document.getElementById("alert-hint").innerHTML = 'Indícia musí byť kratšia ako 50 znakov!';
+            setTimeout(clearAlert, 3000, "alert-hint");
         }
         $('#hint').val('');
         return false;
@@ -195,6 +234,7 @@ $(function () {
                 document.getElementById("alert-guess").innerHTML = '';
             }
             else document.getElementById("alert-guess").innerHTML = "Musíš zadať jedno slovo";
+            setTimeout(clearAlert, 3000, "alert-guess");
         }
         $('#guess').val('');
         return false;

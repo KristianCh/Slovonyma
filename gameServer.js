@@ -177,8 +177,8 @@ game_server.connectUserToRoom = function (io, socket, data, callback) {
     io.in(socket.room).emit('update state', game_server.gameRooms[socket.room]);
 }
 
-game_server.confirmLogin = function (io, socket, allowed, callback) {
-    callback({allowed: allowed});
+game_server.confirmLogin = function (io, socket, response, callback) {
+    callback({response: response});
 }
 
 game_server.selectWord = function (io, socket, word) {

@@ -3,3 +3,4 @@ certificate/
 .idea/
 package.json
 package-lock.json
+dbConfig.json
