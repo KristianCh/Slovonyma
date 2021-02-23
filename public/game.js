@@ -43,6 +43,7 @@ $(function () {
     socket.emit('request leaderboard', '');
 
     if (sessionStorage.getItem("name") !== null) document.getElementById("login").style.display = "none";
+    if (sessionStorage.getItem("sound") === 'off') document.getElementById("sound-btn").className = 'sound-button-off';
 
     document.getElementById("login-btn").onclick = function() {
         document.getElementById("login-btn").className = 'active-button';
@@ -252,6 +253,17 @@ $(function () {
 
     $('#search-player-form').submit(function(e){
         e.preventDefault(); // prevents page reloading
+        if ($('#search-player-name').val().split(" ").length !== 1) {
+            document.getElementById("alert-search-player").innerHTML = "Prezývka musí byť jedno slovo";
+            setTimeout(clearAlert, 3000, "alert-search-player");
+            return false;
+        }
+        if (/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test($('#search-player-name').val())) {
+            document.getElementById("alert-search-player").innerHTML = 'Prezývka nesmie obsahovať špeciálne znaky';
+            setTimeout(clearAlert, 3000, "alert-search-player");
+            $('#nick').val('');
+            return false;
+        }
         socket.emit('request leaderboard', $('#search-player-name').val());
     });
 
@@ -438,10 +450,10 @@ $(function () {
         scores.forEach(function (score) {
             $('#leadboard-table').append(
                 '<tr>' +
-                '    <th>'+ score[0] +'</th>' +
-                '    <th>'+ score[1] +'</th>' +
-                '    <th>'+ score[2] +'</th>' +
-                '    <th>'+ score[3] +'</th>' +
+                '    <th>'+ score.prezyvka +'</th>' +
+                '    <th>'+ score.odohrane_hry +'</th>' +
+                '    <th>'+ score.celkove_body +'</th>' +
+                '    <th>'+ score.ohodnotene_slova +'</th>' +
                 '  </tr>'
             );
         });

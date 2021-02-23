@@ -92,6 +92,32 @@ async function registerNewPlayer(socket, data, callback) {
       });
 }
 
+async function displayLeaderboard(socket, filterName) {
+  var conn = new sql.ConnectionPool(dbConfig);
+
+  conn.connect()
+      // Successfull connection
+      .then(async function () {
+        var req = new sql.Request(conn);
+        var queryResult = await req.query(util.format(
+            "SELECT prezyvka, odohrane_hry, celkove_body, (ISNULL(c1, 0)+ISNULL(c2, 0))ohodnotene_slova FROM (("+
+            "SELECT ID, prezyvka, odohrane_hry, celkove_body, c1 FROM [dbo].[Hraci] LEFT JOIN"+
+            "(SELECT COUNT(hrac1) AS c1, hrac1 FROM [dbo].[Ohodnotenia] GROUP BY hrac1) AS oh1 ON [dbo].[Hraci].ID=hrac1"+
+            ")"+
+            "AS v1 LEFT JOIN"+
+            "(SELECT COUNT(hrac2) AS c2, hrac2 FROM [dbo].[Ohodnotenia] GROUP BY hrac2) AS oh2 ON v1.ID=hrac2)"+
+            "WHERE prezyvka LIKE '%s%';", filterName));
+        game_server.displayLeaderboard(io, socket, queryResult.recordset);
+
+        conn.close();
+      })
+      // Handle connection errors
+      .catch(function (err) {
+        console.log(err);
+        conn.close();
+      });
+}
+
 function getPresetWords() {
   return ['obrovský', 'skala', 'kopec'];
 }
@@ -136,28 +162,7 @@ io.on('connection', (socket) => {
     game_server.showTypingGuess(io, socket, data);
   });
   socket.on('request leaderboard', (filterName)=> {
-    //tu sa z databazy nacitaju udaje o hracoch
-    scores = [
-      ['Ivan', 10, 1400, 90],
-      ['Maroš', 11, 1300, 85],
-      ['Zuzka', 4, 1200, 80],
-      ['Boris', 2, 1100, 75],
-      ['Ignác', 43, 1000, 70],
-      ['Júlia', 50, 900, 75],
-      ['Tereza', 51, 800, 70],
-      ['Fero', 61, 700, 65],
-      ['Ivan2', 2, 600, 60],
-      ['Ivan3', 3, 50, 55],
-    ];
-    if (filterName !== '') {
-      scores = [
-        ['Ivan', 10, 1400, 90],
-        ['Maroš', 11, 1300, 85],
-        ['Zuzka', 4, 1200, 80],
-        ['Boris', 2, 1100, 75]
-      ];
-    }
-    game_server.displayLeaderboard(io, socket, scores);
+    displayLeaderboard(socket, filterName);
   });
 });
 
