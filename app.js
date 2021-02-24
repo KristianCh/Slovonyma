@@ -33,10 +33,86 @@ var io = require('socket.io')(server);
 game_server = require('./gameServer')
 
 var dbConfig = JSON.parse(fs.readFileSync('dbConfig.json'));
-console.log(dbConfig);
+
+/*
+private: false,
+  users: [ 'test2', 'test' ],
+  state: 'game_finished',
+  guessedWords: {},
+  hints: [],
+  guesserPoints: 100,
+  describerPoints: 50,
+  hintsLeft: 10,
+  guessesLeft: 10,
+  ratedWords: 0,
+  prevGuesserIndex: 0,
+  guesser: 'test2',
+  describer: 'test',
+  word: 'skala',
+  playerWantingReplay: 0
+ */
 
 function uploadGameData(data) {
-  //tu sa nahraju udaje z hry do databazy
+    console.log(data);
+    var conn = new sql.ConnectionPool(dbConfig);
+
+    conn.connect()
+        // Successfull connection
+        .then(async function () {
+            var req = new sql.Request(conn);
+            var queryResult = await req.query(util.format(
+                "SELECT ID FROM [dbo].[Hraci] WHERE prezyvka='%s'", data.guesser));
+            var guesserID = queryResult.recordset[0].ID;
+            queryResult = await req.query(util.format(
+                "SELECT ID FROM [dbo].[Hraci] WHERE prezyvka='%s'", data.describer));
+            var describerID = queryResult.recordset[0].ID;
+            queryResult = await req.query(util.format(
+                "SELECT ID FROM [dbo].[Slova] WHERE lema='%s'", data.word));
+            var wordID = 0;
+            if (queryResult.recordset.length > 0) wordID = queryResult.recordset[0].ID;
+            else {
+                queryResult = await req.query(util.format(
+                    "INSERT INTO [dbo].[Slova] (lema, vytvorene_hracom) OUTPUT Inserted.ID VALUES('%s', 1)", data.word));
+                wordID = queryResult.recordset[0].ID;
+            }
+            for (var i = 0; i < data.hints.length; i++) {
+                await req.query(util.format(
+                    "INSERT INTO [dbo].[Indicie] (text, cas_vytvorenia, slovo, hrac) VALUES('%s', %d, %d, %d)",
+                    data.hints[i].text, data.hints[i].timestamp, wordID, describerID));
+            }
+            var guessKeys = Object.keys(data.guessedWords);
+            for (var i = 0; i < guessKeys.length; i++) {
+                if (data.guessedWords[guessKeys[i]].rating >= 0) {
+                    queryResult = await req.query(util.format(
+                        "SELECT ID FROM [dbo].[Slova] WHERE lema='%s'", guessKeys[i]));
+                    var guessID = 0;
+                    if (queryResult.recordset.length > 0) guessID = queryResult.recordset[0].ID;
+                    else {
+                        queryResult = await req.query(util.format(
+                            "INSERT INTO [dbo].[Slova] (lema, vytvorene_hracom) OUTPUT Inserted.ID VALUES('%s', 1)", guessKeys[i]));
+                        guessID = queryResult.recordset[0].ID;
+                    }
+                    await req.query(util.format(
+                        "INSERT INTO [dbo].[Ohodnotenia] (sila_ohodnotenia, cas_vytvorenia, slovo1, slovo2, hrac1, hrac2) " +
+                               "VALUES(%d, %d, %d, %d, %d, %d)",
+                        data.guessedWords[guessKeys[i]].rating, data.guessedWords[guessKeys[i]].timestamp,
+                        wordID, guessID, describerID, guesserID));
+                }
+            }
+            await req.query(util.format(
+                "UPDATE [dbo].[Hraci] SET odohrane_hry = odohrane_hry + 1, celkove_body = celkove_body + %d WHERE ID = %d",
+                data.describerPoints, describerID));
+            await req.query(util.format(
+                "UPDATE [dbo].[Hraci] SET odohrane_hry = odohrane_hry + 1, celkove_body = celkove_body + %d WHERE ID = %d",
+                data.guesserPoints, guesserID));
+
+            conn.close();
+        })
+        // Handle connection errors
+        .catch(function (err) {
+            console.log(err);
+            conn.close();
+        });
 }
 
 async function loginPlayer(socket, data, callback) {
@@ -100,13 +176,13 @@ async function displayLeaderboard(socket, filterName) {
       .then(async function () {
         var req = new sql.Request(conn);
         var queryResult = await req.query(util.format(
-            "SELECT prezyvka, odohrane_hry, celkove_body, (ISNULL(c1, 0)+ISNULL(c2, 0))ohodnotene_slova FROM (("+
+            "SELECT TOP 10 prezyvka, odohrane_hry, celkove_body, (ISNULL(c1, 0)+ISNULL(c2, 0))ohodnotene_slova FROM (("+
             "SELECT ID, prezyvka, odohrane_hry, celkove_body, c1 FROM [dbo].[Hraci] LEFT JOIN"+
             "(SELECT COUNT(hrac1) AS c1, hrac1 FROM [dbo].[Ohodnotenia] GROUP BY hrac1) AS oh1 ON [dbo].[Hraci].ID=hrac1"+
             ")"+
             "AS v1 LEFT JOIN"+
             "(SELECT COUNT(hrac2) AS c2, hrac2 FROM [dbo].[Ohodnotenia] GROUP BY hrac2) AS oh2 ON v1.ID=hrac2)"+
-            "WHERE prezyvka LIKE '%s%';", filterName));
+            "WHERE prezyvka LIKE '%s%' ORDER BY celkove_body DESC;", filterName));
         game_server.displayLeaderboard(io, socket, queryResult.recordset);
 
         conn.close();
@@ -118,8 +194,17 @@ async function displayLeaderboard(socket, filterName) {
       });
 }
 
-function getPresetWords() {
-  return ['obrovský', 'skala', 'kopec'];
+async function getPresetWords() {
+    var conn = new sql.ConnectionPool(dbConfig);
+    var out = ['obrovský', 'skala', 'kopec'];
+    await conn.connect();
+    var req = new sql.Request(conn);
+    var queryResult = await req.query("SELECT TOP 3 lema FROM [dbo].[Slova] ORDER BY newid()");
+    out[0] = queryResult.recordset[0].lema;
+    out[1] = queryResult.recordset[1].lema;
+    out[2] = queryResult.recordset[2].lema;
+    conn.close();
+    return out;
 }
 
 game_server.successfulGuessUpdate = uploadGameData;
