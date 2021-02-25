@@ -22,6 +22,7 @@ $(function () {
         typingGuess = false;
     }
     document.getElementById("logout").onclick = function() {
+        console.log()
         sessionStorage.setItem('name', null);
         document.getElementById("logout").style.display = 'block';
         location.reload();
@@ -47,7 +48,7 @@ $(function () {
 
     socket.emit('request leaderboard', '');
 
-    if (sessionStorage.getItem("name") !== null) {
+    if (sessionStorage.getItem("name") !== null || sessionStorage.getItem("name") !== '') {
         document.getElementById("login").style.display = "none";
         document.getElementById("logout").style.display = "block";
     }
@@ -484,14 +485,14 @@ $(function () {
 
     socket.on('show typing hint', (data)=>{
         if(data.typing === true && role === 'guesser')
-            document.getElementById("typing-display-hint").innerHTML = sessionStorage.getItem("name") + ' píše...';
+            document.getElementById("typing-display-hint").innerHTML = data.user + ' píše...';
         else
             document.getElementById("typing-display-hint").innerHTML = '';
     });
 
     socket.on('show typing guess', (data)=>{
         if(data.typing === true && role === 'describer')
-            document.getElementById("typing-display-guess").innerHTML = sessionStorage.getItem("name") + ' píše...';
+            document.getElementById("typing-display-guess").innerHTML = data.user + ' píše...';
         else
             document.getElementById("typing-display-guess").innerHTML = '';
     });
