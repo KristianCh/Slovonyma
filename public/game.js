@@ -47,7 +47,10 @@ $(function () {
 
     socket.emit('request leaderboard', '');
 
-    if (sessionStorage.getItem("name") !== null) document.getElementById("login").style.display = "none";
+    if (sessionStorage.getItem("name") !== null) {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("logout").style.display = "block";
+    }
     if (sessionStorage.getItem("sound") === 'off') document.getElementById("sound-btn").className = 'sound-button-off';
 
     document.getElementById("login-btn").onclick = function() {
@@ -103,7 +106,7 @@ $(function () {
             return false;
         }
         if($('#pass').val().length < 8 || !$('#pass').val().match(/[0-9]+/) ||
-            $('#pass').val().match(/[A-Z]+/)) {
+            !$('#pass').val().match(/[A-Z]+/)) {
             document.getElementById("alert-login").innerHTML = "Heslo musí mať aspoň 8 znakov, minimálne 1 čislo a 1 veľké písmeno";
             setTimeout(clearAlert, 3000, "alert-login");
             return false;
@@ -153,7 +156,7 @@ $(function () {
             return false;
         }
         if($('#reg-pass').val().length < 8 || !$('#reg-pass').val().match(/[0-9]+/) ||
-            $('#reg-pass').val().match(/[A-Z]+/)) {
+            !$('#reg-pass').val().match(/[A-Z]+/)) {
             document.getElementById("alert-register").innerHTML = "Heslo musí mať aspoň 8 znakov, minimálne 1 čislo a 1 veľké písmeno";
             setTimeout(clearAlert, 3000, "alert-register");
             return false;
