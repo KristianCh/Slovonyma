@@ -24,12 +24,11 @@ server.listen(process.env.port);
 
 game_server = require('./gameServer');
 
-//var dbConfig = JSON.parse(fs.readFileSync(__dirname + '//dbConfig.json'));
 var dbConfig = require(__dirname + '//dbConfig.json');
 console.log(dbConfig);
 
 function uploadGameData(data) {
-  /*console.log(data);
+  console.log(data);
   var conn = new sql.ConnectionPool(dbConfig);
 
   conn.connect()
@@ -88,11 +87,11 @@ function uploadGameData(data) {
       .catch(function (err) {
         console.log(err);
         conn.close();
-      });*/
+      });
 }
 
 async function loginPlayer(socket, data, callback) {
-  /*var conn = new sql.ConnectionPool(dbConfig);
+  var conn = new sql.ConnectionPool(dbConfig);
 
   conn.connect()
       // Successfull connection
@@ -114,11 +113,11 @@ async function loginPlayer(socket, data, callback) {
       .catch(function (err) {
         console.log(err);
         conn.close();
-      });*/
+      });
 }
 
 async function registerNewPlayer(socket, data, callback) {
-  /*var conn = new sql.ConnectionPool(dbConfig);
+  var conn = new sql.ConnectionPool(dbConfig);
 
   conn.connect()
       // Successfull connection
@@ -141,11 +140,11 @@ async function registerNewPlayer(socket, data, callback) {
       .catch(function (err) {
         console.log(err);
         conn.close();
-      });*/
+      });
 }
 
 async function displayLeaderboard(socket, filterName) {
-  /*var conn = new sql.ConnectionPool(dbConfig);
+  var conn = new sql.ConnectionPool(dbConfig);
 
   conn.connect()
       // Successfull connection
@@ -167,11 +166,11 @@ async function displayLeaderboard(socket, filterName) {
       .catch(function (err) {
         console.log(err);
         conn.close();
-      });*/
+      });
 }
 
 async function getPresetWords() {
-  /*var conn = new sql.ConnectionPool(dbConfig);
+  var conn = new sql.ConnectionPool(dbConfig);
   var out = ['obrovský', 'skala', 'kopec'];
   await conn.connect();
   var req = new sql.Request(conn);
@@ -180,7 +179,7 @@ async function getPresetWords() {
   out[1] = queryResult.recordset[1].lema;
   out[2] = queryResult.recordset[2].lema;
   conn.close();
-  return out;*/
+  return out;
 }
 
 game_server.successfulGuessUpdate = uploadGameData;
