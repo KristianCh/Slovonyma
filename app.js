@@ -24,8 +24,8 @@ server.listen(process.env.port);
 
 game_server = require('./gameServer');
 
-/*var dbConfig = JSON.parse(fs.readFileSync('dbConfig.json'));
-console.log(dbConfig);*/
+var dbConfig = JSON.parse(fs.readFileSync('dbConfig.json'));
+console.log(dbConfig);
 
 function uploadGameData(data) {
   /*console.log(data);
