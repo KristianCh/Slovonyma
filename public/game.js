@@ -23,7 +23,7 @@ $(function () {
     }
     document.getElementById("logout").onclick = function() {
         console.log()
-        sessionStorage.setItem('name', null);
+        sessionStorage.setItem('name', '');
         document.getElementById("logout").style.display = 'block';
         location.reload();
     }
