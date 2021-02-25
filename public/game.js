@@ -2,12 +2,6 @@ function leave() {
     location.reload();
 }
 
-function logout() {
-    sessionStorage.setItem('name', null);
-    document.getElementById("logout").style.display = 'block';
-    location.reload();
-}
-
 $(function () {
     var socket = io({transports:['websocket']});
     const callbackAlerts = ["Miestnosť je plná", "Nenašla sa voľná  miestnosť", "Miestnosť s týmto kódom už existuje", "Musíš byť prihlásený",
@@ -27,12 +21,15 @@ $(function () {
         socket.emit('show typing guess', {user:sessionStorage.getItem("name"), typing:false})
         typingGuess = false;
     }
+    document.getElementById("logout").onclick = function() {
+        sessionStorage.setItem('name', null);
+        document.getElementById("logout").style.display = 'block';
+        location.reload();
+    }
 
     var clearAlert = function(alertId) {
         document.getElementById(alertId).innerHTML = '';
     }
-
-
 
     document.getElementById("sound-btn").onclick = function () {
         if (sessionStorage.getItem("sound") !== 'off') {
@@ -105,6 +102,12 @@ $(function () {
             setTimeout(clearAlert, 3000, "alert-login");
             return false;
         }
+        if($('#pass').val().length < 8 || !$('#pass').val().match(/[0-9]+/) ||
+            $('#pass').val().match(/[A-Z]+/)) {
+            document.getElementById("alert-login").innerHTML = "Heslo musí mať aspoň 8 znakov, minimálne 1 čislo a 1 veľké písmeno";
+            setTimeout(clearAlert, 3000, "alert-login");
+            return false;
+        }
         if ($('#nick').val() !== '') {
             if ($('#nick').val().split(" ").length !== 1) {
                 document.getElementById("alert-login").innerHTML = "Prezývka musí byť jedno slovo";
@@ -146,6 +149,12 @@ $(function () {
         }
         if($('#reg-pass').val() !== $('#reg-pass-confirm').val()) {
             document.getElementById("alert-register").innerHTML = "Heslá sa musia zhodovať";
+            setTimeout(clearAlert, 3000, "alert-register");
+            return false;
+        }
+        if($('#reg-pass').val().length < 8 || !$('#reg-pass').val().match(/[0-9]+/) ||
+            $('#reg-pass').val().match(/[A-Z]+/)) {
+            document.getElementById("alert-register").innerHTML = "Heslo musí mať aspoň 8 znakov, minimálne 1 čislo a 1 veľké písmeno";
             setTimeout(clearAlert, 3000, "alert-register");
             return false;
         }

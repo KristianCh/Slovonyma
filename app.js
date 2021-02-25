@@ -106,6 +106,8 @@ function uploadGameData(data) {
 }
 
 async function loginPlayerPOST(data, res, next) {
+    data.password = data.password.replace(";", "");
+    data.name = data.name.replace(";", "");
     var conn = new sql.ConnectionPool(dbConfig);
     conn.connect()
         // Successfull connection
@@ -134,6 +136,8 @@ async function loginPlayerPOST(data, res, next) {
 
 async function registerNewPlayerPOST(data, res, next) {
     var conn = new sql.ConnectionPool(dbConfig);
+    data.password = data.password.replace(";", "");
+    data.name = data.name.replace(";", "");
     conn.connect()
         // Successfull connection
         .then(async function () {

@@ -105,6 +105,7 @@ game_server.disconnectUser = function (io, socket) {
 }
 
 game_server.connectUserToRoom = function (io, socket, data, callback) {
+    data.name = data.name.replace(';', '');
     if (data.name === '') {
         callback({id:4, room:data.room});
         return;
@@ -184,10 +185,12 @@ game_server.confirmLogin = function (io, socket, response, callback) {
 }
 
 game_server.selectWord = function (io, socket, word) {
+    word = word.replace(';', '');
     game_server.lema(io, socket, word, 'word');
 }
 
 game_server.hintSubmit = function (io, socket, hint) {
+    hint = hint.replace(';', '');
     if (game_server.gameRooms[socket.room].hintsLeft > 0) {
         game_server.gameRooms[socket.room].hintsLeft--;
         game_server.gameRooms[socket.room].hints.push({text: hint, timestamp: Date.now()});
@@ -197,6 +200,7 @@ game_server.hintSubmit = function (io, socket, hint) {
 }
 
 game_server.guessSubmit = function (io, socket, guess) {
+    guess = guess.replace(';', '');
     game_server.lema(io, socket, guess, 'guess');
 }
 
