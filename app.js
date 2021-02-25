@@ -6,7 +6,7 @@ const util = require('util');
 var sql = require("mssql");
 
 var app = express();
-var server = require('http').createServer(app);
+var server = require('https').createServer(app);
 
 var io = require('socket.io')(server);
 
