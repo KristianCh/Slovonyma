@@ -3,13 +3,16 @@
   "version": "0.0.0",
   "description": "my first socket.io app",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "client-sessions": "^0.8.0",
     "cors-anywhere": "^0.4.3",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "fs": "0.0.1-security",
+    "mssql": "^6.3.1",
     "node-fetch": "^2.6.1",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "util": "^0.12.3"
   }
 }

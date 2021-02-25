@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 
 var game_server = module.exports = {gameRooms: {}}
 
-game_server.getPresetWords = function(){};
+game_server.getPresetWords = async function(){};
 game_server.successfulGuessUpdate = function(placeholder){};
 
 
@@ -59,7 +59,7 @@ game_server.lema = async function(io, socket, text, type) {
     }
 }
 
-game_server.decideRoles = function(io, socket) {
+game_server.decideRoles = async function(io, socket) {
     var guesserIndex = Math.round(Math.random());
     if (game_server.gameRooms[socket.room].prevGuesserIndex !== -1) {
         guesserIndex = 1 - game_server.gameRooms[socket.room].prevGuesserIndex;
@@ -69,8 +69,9 @@ game_server.decideRoles = function(io, socket) {
     game_server.gameRooms[socket.room].describer = game_server.gameRooms[socket.room].users[Math.abs(guesserIndex-1)];
     game_server.gameRooms[socket.room].state = 'waiting_for_word_select';
 
-    var words = game_server.getPresetWords();
+    var words = await game_server.getPresetWords();
     io.in(socket.room).emit('preset words', words);
+    io.in(socket.room).emit('update state', game_server.gameRooms[socket.room]);
 }
 
 game_server.disconnectUser = function (io, socket) {
@@ -178,8 +179,8 @@ game_server.connectUserToRoom = function (io, socket, data, callback) {
     io.in(socket.room).emit('update state', game_server.gameRooms[socket.room]);
 }
 
-game_server.confirmLogin = function (io, socket, allowed, callback) {
-    callback({allowed: allowed});
+game_server.confirmLogin = function (io, socket, response, callback) {
+    callback({response: response});
 }
 
 game_server.selectWord = function (io, socket, word) {
