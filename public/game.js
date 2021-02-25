@@ -109,8 +109,10 @@ $(function () {
                 $('#nick').val('');
                 return false;
             }
-            socket.emit('login', {name: $('#nick').val(), password: $('#pass').val()}, (callback) => {
-                if (callback.response) {
+
+            $.post('/verify-login', { 'name' :  $('#nick').val(), 'password': $('#pass').val()}, function(data) {
+                console.log(data);
+                if (data.response) {
                     sessionStorage.setItem("name", $('#nick').val());
                     document.getElementById("login").style.display = "none";
                 }
@@ -151,8 +153,9 @@ $(function () {
                 $('#nick').val('');
                 return false;
             }
-            socket.emit('register', {name: $('#reg-nick').val(), password: $('#reg-pass').val()}, (callback) => {
-                if (callback.response) {
+            $.post('/verify-register', { 'name' :  $('#reg-nick').val(), 'password': $('#reg-pass').val()}, function(data) {
+                console.log(data);
+                if (data.response) {
                     sessionStorage.setItem("name", $('#reg-nick').val());
                     document.getElementById("login").style.display = "none";
                 }
