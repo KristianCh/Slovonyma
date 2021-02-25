@@ -119,37 +119,6 @@ a.help:hover {
     animation: move-wave 6s ease-in-out infinite;
 }
 
-@media screen and (orientation: portrait) {
-    .hint-container, .guess-container, .active-users {
-        width: 40%;
-        height: 65%;
-        display: table;
-        margin-left: 2%;
-        margin-right: 2%;
-        font-size: 30px;
-        margin-bottom: 10%;
-    }
-    .nick-set, .stats {
-        width: 80%;
-        font-size: 30px;
-    }
-    h1 {
-        font-size: 40px;
-    }
-    form {
-        font-size: 30px;
-    }
-
-    input {
-        font-size: 30px;
-    }
-
-    button {
-        font-size: 30px;
-    }
-
-}
-
 .hints, .guesses, .users {
     list-style-type: none;
 }
