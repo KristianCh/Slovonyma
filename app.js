@@ -1,23 +1,38 @@
 const express = require('express');
 const path = require('path');
-
+const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const util = require('util');
 var sql = require("mssql");
 
 var app = express();
-var server = require('https').createServer(app);
+var server = require('http').createServer(app);
 
 var io = require('socket.io')(server);
 
 
 app.use(express.static(path.join(__dirname, '/public')));
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/game.html');
 });
 
 app.get('/ako-hrat', (req, res) => {
   res.sendFile(__dirname + '/public/how_to_play.html');
+});
+
+app.post('/verify-login' , function(req, res, next){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    loginPlayerPOST(req.body, res, next);
+});
+
+app.post('/verify-register' , function(req, res, next){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    registerNewPlayerPOST(req.body, res, next);
 });
 
 server.listen(process.env.port);
@@ -90,57 +105,59 @@ function uploadGameData(data) {
       });
 }
 
-async function loginPlayer(socket, data, callback) {
-  var conn = new sql.ConnectionPool(dbConfig);
-
-  conn.connect()
-      // Successfull connection
-      .then(async function () {
-        var req = new sql.Request(conn);
-        var queryResult = await req.query(util.format("SELECT heslo FROM [dbo].[Hraci] WHERE prezyvka='%s'", data.name));
-        if (queryResult.recordset.length < 1) {
-          game_server.confirmLogin(io, socket, false, callback);
-          conn.close();
-          return;
-        }
-        bcrypt.compare(data.password, queryResult.recordset[0].heslo)
-            .then(result => {
-              game_server.confirmLogin(io, socket, result, callback);
-            });
-        conn.close();
-      })
-      // Handle connection errors
-      .catch(function (err) {
-        console.log(err);
-        conn.close();
-      });
+async function loginPlayerPOST(data, res, next) {
+    var conn = new sql.ConnectionPool(dbConfig);
+    conn.connect()
+        // Successfull connection
+        .then(async function () {
+            var req = new sql.Request(conn);
+            var queryResult = await req.query(util.format("SELECT heslo FROM [dbo].[Hraci] WHERE prezyvka='%s'", data.name));
+            if (queryResult.recordset.length < 1) {
+                res.json({response: false});
+                next();
+                conn.close();
+                return;
+            }
+            bcrypt.compare(data.password, queryResult.recordset[0].heslo)
+                .then(result => {
+                    res.json({response: result});
+                    next();
+                });
+            conn.close();
+        })
+        // Handle connection errors
+        .catch(function (err) {
+            console.log(err);
+            conn.close();
+        });
 }
 
-async function registerNewPlayer(socket, data, callback) {
-  var conn = new sql.ConnectionPool(dbConfig);
-
-  conn.connect()
-      // Successfull connection
-      .then(async function () {
-
-        // Create request instance, passing in connection instance
-        var req = new sql.Request(conn);
-        var queryResult = await req.query(util.format("SELECT prezyvka FROM [dbo].[Hraci] WHERE prezyvka='%s'", data.name))
-
-        if (queryResult.recordset.length === 0) {
-          var hash = await bcrypt.hash(data.password, 5)
-          await req.query(util.format("INSERT INTO [dbo].[Hraci] (prezyvka, heslo, odohrane_hry, celkove_body)" +
-              "VALUES ('%s', '%s', 0, 0)", data.name, hash));
-          game_server.confirmLogin(io, socket, true, callback);
-        }
-        else game_server.confirmLogin(io, socket, false, callback);
-        conn.close();
-      })
-      // Handle connection errors
-      .catch(function (err) {
-        console.log(err);
-        conn.close();
-      });
+async function registerNewPlayerPOST(data, res, next) {
+    var conn = new sql.ConnectionPool(dbConfig);
+    conn.connect()
+        // Successfull connection
+        .then(async function () {
+            // Create request instance, passing in connection instance
+            var req = new sql.Request(conn);
+            var queryResult = await req.query(util.format("SELECT prezyvka FROM [dbo].[Hraci] WHERE prezyvka='%s'", data.name))
+            if (queryResult.recordset.length === 0) {
+                var hash = await bcrypt.hash(data.password, 5)
+                await req.query(util.format("INSERT INTO [dbo].[Hraci] (prezyvka, heslo, odohrane_hry, celkove_body)" +
+                    "VALUES ('%s', '%s', 0, 0)", data.name, hash));
+                res.json({response: true});
+                next();
+            }
+            else {
+                res.json({response: false});
+                next();
+            }
+            conn.close();
+        })
+        // Handle connection errors
+        .catch(function (err) {
+            console.log(err);
+            conn.close();
+        });
 }
 
 async function displayLeaderboard(socket, filterName) {

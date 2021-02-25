@@ -202,6 +202,7 @@ game_server.guessSubmit = function (io, socket, guess) {
 
 game_server.rateGuess = function (io, socket, data) {
     game_server.gameRooms[socket.room].guessedWords[data.word].rating = data.rating;
+    if (data.rating > 4) return;
     if (data.rating >= 0) {
         game_server.gameRooms[socket.room].guesserPoints += 1 + Math.ceil(data.rating / 2);
         game_server.gameRooms[socket.room].describerPoints += 2;
