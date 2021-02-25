@@ -3,7 +3,7 @@ const path = require('path');
 
 const bcrypt = require('bcrypt');
 const util = require('util');
-const sql = require("mssql");
+var sql = require("mssql");
 
 var app = express();
 var server = require('http').createServer(app);
