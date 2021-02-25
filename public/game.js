@@ -2,6 +2,12 @@ function leave() {
     location.reload();
 }
 
+function logout() {
+    sessionStorage.setItem('name', null);
+    document.getElementById("logout").style.display = 'block';
+    location.reload();
+}
+
 $(function () {
     var socket = io({transports:['websocket']});
     const callbackAlerts = ["Miestnosť je plná", "Nenašla sa voľná  miestnosť", "Miestnosť s týmto kódom už existuje", "Musíš byť prihlásený",
@@ -25,6 +31,8 @@ $(function () {
     var clearAlert = function(alertId) {
         document.getElementById(alertId).innerHTML = '';
     }
+
+
 
     document.getElementById("sound-btn").onclick = function () {
         if (sessionStorage.getItem("sound") !== 'off') {
@@ -114,6 +122,7 @@ $(function () {
                 if (data.response) {
                     sessionStorage.setItem("name", $('#nick').val());
                     document.getElementById("login").style.display = "none";
+                    document.getElementById("logout").style.display = "block";
                 }
                 else {
                     document.getElementById("alert-login").innerHTML = "Nesprávne prihlásenie";
@@ -157,6 +166,7 @@ $(function () {
                 if (data.response) {
                     sessionStorage.setItem("name", $('#reg-nick').val());
                     document.getElementById("login").style.display = "none";
+                    document.getElementById("logout").style.display = "block";
                 }
                 else {
                     document.getElementById("alert-register").innerHTML = "Prezývka už existuje";
