@@ -157,7 +157,7 @@ async function displayLeaderboard(socket, filterName) {
             ")"+
             "AS v1 LEFT JOIN"+
             "(SELECT COUNT(hrac2) AS c2, hrac2 FROM [dbo].[Ohodnotenia] GROUP BY hrac2) AS oh2 ON v1.ID=hrac2)"+
-            "WHERE prezyvka LIKE '%%s%' ORDER BY celkove_body DESC;", filterName));
+            "WHERE prezyvka LIKE '%s%' ORDER BY celkove_body DESC;", filterName));
         game_server.displayLeaderboard(io, socket, queryResult.recordset);
 
         conn.close();
