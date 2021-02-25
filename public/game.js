@@ -23,8 +23,7 @@ $(function () {
     }
     document.getElementById("logout").onclick = function() {
         console.log()
-        sessionStorage.setItem('name', '');
-        document.getElementById("logout").style.display = 'block';
+        sessionStorage.setItem("name", '');
         location.reload();
     }
 
@@ -48,7 +47,7 @@ $(function () {
 
     socket.emit('request leaderboard', '');
 
-    if (sessionStorage.getItem("name") !== null || sessionStorage.getItem("name") !== '') {
+    if (sessionStorage.getItem("name") !== null && sessionStorage.getItem("name") !== '') {
         document.getElementById("login").style.display = "none";
         document.getElementById("logout").style.display = "block";
     }
