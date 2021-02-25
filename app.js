@@ -1,9 +1,9 @@
 const express = require('express');
 const path = require('path');
 
-/*const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const util = require('util');
-var sql = require("mssql");*/
+var sql = require("mssql");
 
 var app = express();
 var server = require('http').createServer(app);
