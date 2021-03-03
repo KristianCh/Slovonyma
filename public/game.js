@@ -78,6 +78,11 @@ $(function () {
             return false;
         }
         var roomId = $('#room').val();
+        if (/[ ]/.test(roomId)) {
+            document.getElementById("alert-join").innerHTML = 'Kód miestnosti nemôže obsahovať medzeru';
+            setTimeout(clearAlert, 3000, "alert-join");
+            return false;
+        }
         socket.emit('join room', {name: sessionStorage.getItem("name"), room:roomId, type:e.originalEvent.submitter.value}, (callback) => {
             if (callback.id === 0) {
 
@@ -179,6 +184,7 @@ $(function () {
                     sessionStorage.setItem("name", $('#reg-nick').val());
                     document.getElementById("login").style.display = "none";
                     document.getElementById("logout").style.display = "block";
+                    document.getElementById("help").className = "help help-animate";
                 }
                 else {
                     document.getElementById("alert-register").innerHTML = "Prezývka už existuje";
