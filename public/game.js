@@ -203,7 +203,7 @@ $(function () {
         e.preventDefault(); // prevents page reloading
         if (e.originalEvent.submitter.value === '') {
             if ($('#word').val() !== '' && $('#word').val().split(" ").length === 1) {
-                document.getElementById("word-select-button").style.display = "none";
+                //document.getElementById("word-select-button").style.display = "none";
                 document.getElementById("loader").style.display = "block";
                 socket.emit('select word', $('#word').val());
                 word = $('#word').val();
@@ -214,7 +214,7 @@ $(function () {
             }
         }
         else {
-            document.getElementById("word-select-button").style.display = "none";
+            //document.getElementById("word-select-button").style.display = "none";
             document.getElementById("loader").style.display = "block";
             socket.emit('select word', e.originalEvent.submitter.value);
             word = e.originalEvent.submitter.value;
@@ -330,7 +330,7 @@ $(function () {
             if (msg.describer === sessionStorage.getItem("name")) {
                 role = 'describer';
                 document.getElementById("word-select").style.display = "block";
-                document.getElementById("word-select-button").style.display = "block";
+                //document.getElementById("word-select-button").style.display = "block";
             }
             else {
                 role = 'guesser';
