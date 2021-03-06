@@ -214,7 +214,7 @@ game_server.rateGuess = function (io, socket, data) {
     }
     else {
         game_server.gameRooms[socket.room].guesserPoints--;
-        game_server.gameRooms[socket.room].describerPoints++;
+        game_server.gameRooms[socket.room].describerPoints += 5;
     }
     io.in(socket.room).emit('update guesses', game_server.gameRooms[socket.room].guessedWords);
     io.in(socket.room).emit('update state', game_server.gameRooms[socket.room]);
