@@ -53,6 +53,9 @@ game_server.lema = async function(io, socket, text, type) {
 
         if (game_server.gameRooms[socket.room].guessesLeft === 0) {
             game_server.gameRooms[socket.room].state = 'game_finished';
+			
+            game_server.successfulGuessUpdate(game_server.gameRooms[socket.room]);
+			
             game_server.gameRooms[socket.room].playerWantingReplay = 0;
             io.in(socket.room).emit('update state', game_server.gameRooms[socket.room]);
         }
