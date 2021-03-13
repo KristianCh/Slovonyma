@@ -195,7 +195,7 @@ async function getPresetWords() {
   var out = ['obrovský', 'skala', 'kopec'];
   await conn.connect();
   var req = new sql.Request(conn);
-  var queryResult = await req.query("SELECT TOP 3 lema FROM [dbo].[Slova] WHERE vytvorene_hracom = 0 ORDER BY newid()");
+  var queryResult = await req.query("SELECT TOP 3 lema FROM [dbo].[Slova] ORDER BY newid()");
   out[0] = queryResult.recordset[0].lema;
   out[1] = queryResult.recordset[1].lema;
   out[2] = queryResult.recordset[2].lema;
