@@ -53,6 +53,9 @@ game_server.lema = async function(io, socket, text, type) {
 
         if (game_server.gameRooms[socket.room].guessesLeft === 0) {
             game_server.gameRooms[socket.room].state = 'game_finished';
+
+            game_server.successfulGuessUpdate(game_server.gameRooms[socket.room]);
+
             game_server.gameRooms[socket.room].playerWantingReplay = 0;
             io.in(socket.room).emit('update state', game_server.gameRooms[socket.room]);
         }
@@ -203,13 +206,13 @@ game_server.rateGuess = function (io, socket, data) {
     game_server.gameRooms[socket.room].guessedWords[data.word].rating = data.rating;
     if (data.rating > 4) return;
     if (data.rating >= 0) {
-        game_server.gameRooms[socket.room].guesserPoints += 1 + Math.ceil(data.rating / 2);
-        game_server.gameRooms[socket.room].describerPoints += 2;
+        game_server.gameRooms[socket.room].guesserPoints += 3 + data.rating;
+        game_server.gameRooms[socket.room].describerPoints += 5;
         game_server.gameRooms[socket.room].ratedWords++;
     }
     else {
         game_server.gameRooms[socket.room].guesserPoints--;
-        game_server.gameRooms[socket.room].describerPoints++;
+        game_server.gameRooms[socket.room].describerPoints += 3;
     }
     io.in(socket.room).emit('update guesses', game_server.gameRooms[socket.room].guessedWords);
     io.in(socket.room).emit('update state', game_server.gameRooms[socket.room]);
