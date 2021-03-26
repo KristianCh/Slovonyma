@@ -5,7 +5,7 @@ const fs = require('fs');
 const bcrypt = require('bcrypt');
 const util = require('util');
 const bodyParser = require('body-parser');
-var sql = require("mssql");
+var sql = require("mssql/msnodesqlv8");
 
 var app = express();
 
@@ -48,7 +48,7 @@ var io = require('socket.io')(server);
 
 game_server = require('./gameServer')
 
-var dbConfig = JSON.parse(fs.readFileSync('dbConfig.json'));
+var dbConfig = JSON.parse(fs.readFileSync('dbConfigLocal.json'));
 
 function uploadGameData(data) {
     console.log(data);
