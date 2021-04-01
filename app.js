@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const util = require('util');
 const bodyParser = require('body-parser');
 var sql = require("mssql/msnodesqlv8");
+var ip = require("ip");
 
 var app = express();
 
@@ -49,8 +50,8 @@ const credentials = {
 var server = https.createServer(credentials, app);
 
 //pripojenie serveru na port a adresu
-server.listen({ port: 5000, host: '192.168.0.16'}, () => {
-  console.log('listening on https://192.168.0.16:5000');
+server.listen({ port: 5000, host: ip.address()}, () => {
+  console.log('listening on https://' + ip.address() + ':5000');
 });
 
 //vytvorenie socket.IO rozhrania nad serverom
