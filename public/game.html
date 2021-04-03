@@ -7,33 +7,41 @@
     <link rel="icon" href="icon.png">
 </head>
 <body>
+<!-- animované pozadie -->
 <div class="animated-bg-wrapper">
     <div class="wave"></div>
 </div>
 
+<!-- zvuky -->
 <audio id="notification" src="notification.wav" preload="auto"></audio>
 <audio id="finish" src="finish.wav" preload="auto"></audio>
 
+<!-- div obsahujúci všetok obsah -->
 <div class="content-container" style="height: 80%">
-
+    <!-- element so zoznamom aktívnych hráčov -->
     <div class="active-users" id="active-users" style="display: none">
         <p id="room_code">Kód miestnosti: xxxxxxx</p>
         <p id="u">Pripojení používatelia</p>
         <ul class="users" id="users"></ul>
     </div>
 
+    <!-- tlačidlá vypnutia a zapnutia zvuku a odhlásenia -->
     <button class="sound-button-on" id="sound-btn">♫</button>
     <button id="logout" style="display: none" onclick="logout">Odhlásiť sa</button>
 
+    <!-- div s elementami menu -->
     <div class="menu-content" id="menu-content">
+        <!-- div s prihlasovaním, registorvaním a pripájaním do hry -->
         <div class="left-content" id="left-content">
             <div class="main-title" id="main-title">Slovonymá <br>
                 <a href="https://192.168.0.16:5000/ako-hrat" class="help" id="help">Ako hrať?</a>
             </div>
+            <!-- div s registráciou a prihlasovaním -->
             <div class="nick-set" id="login">
                 <button id="login-btn" class="active-button">Prihlásenie</button>
                 <button id="register-btn" class="inactive-button">Registrácia</button>
                 <br><br>
+                <!-- tab s prihlásením -->
                 <div id="login-tab">
                     <h1> Prihlás sa! </h1> <br>
                     <form action="" id="login-form">
@@ -45,6 +53,7 @@
                         <p id="alert-login"></p>
                     </form>
                 </div>
+                <!-- tab s registráciou -->
                 <div id="register-tab" style="display: none">
                     <h1> Registruj sa! </h1> <br>
                     <form action="" id="register-form">
@@ -59,7 +68,7 @@
                     </form>
                 </div>
             </div>
-
+            <!-- div s pripojením do miestnosti -->
             <div class="nick-set" id="room-set">
                 <h1> Pripoj sa! </h1> <br>
                 <p id="active-rooms">Aktívne miestnosti: 0</p> <br>
@@ -73,6 +82,7 @@
                 </form>
             </div>
         </div>
+        <!-- div s rebríčkom hráčov -->
         <div class="leaderboard-container" id="leaderboard" style="text-align: center">
             <h1> Rebríček hráčov </h1> <br>
             <table class="leaderboard" id="leadboard-table"></table>
@@ -84,10 +94,12 @@
         </div>
     </div>
 
+    <!-- zobrazenie správy o čakaní na druhého hráča -->
     <div class="game-div" id="wait-for-other-message" style="display: none">
         <h1> Čaká sa na druhého hráča </h1>
     </div>
 
+    <!-- div s výberom slova opisovačom -->
     <div class="game-div" id="word-select" style="display: none">
         <h1> Si opisovač, vyber si slovo </h1> <br>
         <form action="" class="word-form" id="word-select-form">
@@ -105,14 +117,17 @@
         </form>
     </div>
 
+    <!-- zobrazenie správy o čakaní na výber slova opisovačom  -->
     <div class="game-div" id="wait-for-word-select-message" style="display: none">
         <h1> Si hádač! Čakaj, kým si opisovač vyberie slovo </h1>
     </div>
 
+    <!-- div so zobrazením slova počas hry -->
     <div class="game-div" id="top-bar" style="display: none">
         <h1 id="word-display">  </h1>
     </div>
 
+    <!-- div s listom indícií -->
     <div class="hint-container" id="hint-display" style="display: none">
         <h1> Indície </h1>
         <ul class="hints" id="hints"></ul>
@@ -125,6 +140,7 @@
         <p id="alert-hint"></p>
     </div>
 
+    <!-- div s listom hádaní -->
     <div class="guess-container" id="guess-display" style="display: none">
         <h1> Hádané slová </h1>
         <ul class="guesses" id="guesses"></ul>
@@ -137,6 +153,7 @@
         <p id="alert-guess"></p>
     </div>
 
+    <!-- GUI elementy koncu hry -->
     <div class="game-div" id="end-stats" style="display: none"></div>
     <div class="game-div" id="end-buttons" style="display: none">
         <form action="" id="replay-form">
@@ -145,6 +162,7 @@
         <button onclick="leave()">Skončiť hru</button>
     </div>
 
+    <!-- načítanie skriptov -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="game.js"></script>
